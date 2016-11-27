@@ -33,6 +33,11 @@
             android:name=".JSON.SyncService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <activity android:name=".Event.MainEvent"
+            android:parentActivityName=".MainActivity"
+            />
+
     </application>
 
 </manifest>
