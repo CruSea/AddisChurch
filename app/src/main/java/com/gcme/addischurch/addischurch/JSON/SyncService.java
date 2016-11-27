@@ -297,7 +297,7 @@ public class SyncService extends JobService {
                 jsonObject = new JSONObject(json_string);
                 jsonArray = jsonObject.getJSONArray("server_response");
                 int count = 0;
-                String ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl;
+                String ID, name ,  churchlocation , contacts,web,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl;
                 while (count < jsonArray.length()) {
 
                     JSONObject JO = jsonArray.getJSONObject(count);
@@ -305,6 +305,7 @@ public class SyncService extends JobService {
                     name= JO.getString(DbHelper.NAME);
                     churchlocation =JO.getString(DbHelper.CHURCH_LOCATION);
                     contacts=JO.getString(DbHelper.CONTACTS);
+                    web=JO.getString(DbHelper.WEB);
                     sermons=JO.getString(DbHelper.SERMONS);
                     category=JO.getString(DbHelper.CATEGORY);
                     longitude=JO.getString(DbHelper.LONGITUDE);
@@ -313,7 +314,7 @@ public class SyncService extends JobService {
                     ImageLoction = JO.getString("_imagesLocation");
                     ImageUrl = JO.getString("_ImageUrl");
                         /**This method will add the json data to the database**/
-                        addData(ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
+                        addData(ID, name ,  churchlocation , contacts, web, sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
                         count++;
 
 
@@ -398,13 +399,13 @@ public class SyncService extends JobService {
 
 
     /**Insert data from JSON Request**/
-    public void addData(String Id,String name ,  String churchlocation , String contacts, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
+    public void addData(String Id,String name ,  String churchlocation , String contacts,String web, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
         {
 
 
             DbHelper =new DatabaseAdaptor(this);
 
-        long id = DbHelper.InsertChurch(Id, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl) ;
+        long id = DbHelper.InsertChurch(Id, name ,  churchlocation , contacts,web,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl) ;
         if (id < 0) {
 
             //Message.message(this, "JSON insert failed");

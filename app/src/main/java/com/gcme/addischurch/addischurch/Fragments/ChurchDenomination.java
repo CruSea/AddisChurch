@@ -115,13 +115,15 @@ public class ChurchDenomination extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String rowId = cursor.getString(cursor.getColumnIndex(DbHelper.NAME));
+                String rowName = cursor.getString(cursor.getColumnIndex(DbHelper.NAME));
+                String rowId = cursor.getString(cursor.getColumnIndex(DbHelper.ID));
 
 
 
                 ChurchDetail secondFrag = new ChurchDetail();
                 Bundle args = new Bundle();
-                args.putString("Key",String.valueOf(rowId));
+                args.putString("Key",String.valueOf(rowName));
+                args.putString("Keyid",String.valueOf(rowId));
 
                 secondFrag .setArguments(args);
                 getFragmentManager()

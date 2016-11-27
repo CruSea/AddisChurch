@@ -41,9 +41,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -83,6 +85,7 @@ public class Home_fragment extends Fragment {
                         // Set the camera to the greatest possible zoom level that includes the
                         // bounds
                         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 13));
+                        addMarker();
 
                     }
                 });
@@ -374,8 +377,52 @@ public class Home_fragment extends Fragment {
         alertDialog.show();
     }
 
+    /**This method pin points the location data from the database to map*/
+    void addMarker(){
+
+        DatabaseAdaptor DbHelper;
+        DbHelper = new DatabaseAdaptor(getActivity());
+        Cursor c = DbHelper.getAll();
+        c.moveToFirst();
+        if(c.getCount()>0){
+            while (!c.isAfterLast()){
+
+                final String cname = c.getString(c.getColumnIndex(DbHelper.NAME));
+                final String Longitude = c.getString(c.getColumnIndex(DbHelper.LONGITUDE));
+                final String Latitude = c.getString(c.getColumnIndex(DbHelper.LONGITUDE));
+                final String cate = c.getString(c.getColumnIndex(DbHelper.CATEGORY));
+
+                if (!Latitude.equals("")&&!Longitude.equals("")) {
+                    Double latit = Double.parseDouble(Latitude);
+                    Double longi = Double.parseDouble(Longitude);
+                    LatLng pos = new LatLng(latit, longi);
+                    pinpoint(cname,pos,cate);
+
+                }
+                c.moveToNext();
+
+            }
+            c.close();
+
+        }else {
+
+            Toast.makeText(getActivity(),"There is no location data " , Toast.LENGTH_LONG).show();
+
+        }
+    }
+    private void pinpoint(String cname, LatLng pos,String cate) {
+
+            mMap.addMarker(new MarkerOptions().position(pos).title(cname).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_map_pin)));
 
     }
 
+
+
+
+    /** This is the search **/
+
+
+
+}
 
 

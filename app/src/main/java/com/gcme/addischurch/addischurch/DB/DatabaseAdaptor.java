@@ -17,12 +17,15 @@ public class DatabaseAdaptor {
     String TABLE1_NAME = "church_table";
     String TABLE2_NAME = "events_table";
     String TABLE3_NAME = "denominations_table";
+    String TABLE4_NAME = "sermons_table";
+    String TABLE5_NAME = "schedules_category_table";
 
     public String ID  = "_id";
 
     public String NAME  = "_church_name";
     public String CHURCH_LOCATION  = "_location";
     public String CONTACTS  = "_contacts";
+    public String WEB="_website";
     public String LONGITUDE="_longitude";
     public String LATITUDE="_latitude";
     public String SERMONS="_sermons";
@@ -56,7 +59,7 @@ public class DatabaseAdaptor {
 
     /**Church Info**/
 
-    public long InsertChurch(String _id,String name ,  String churchlocation , String contacts, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
+    public long InsertChurch(String _id,String name ,  String churchlocation , String contacts,String web, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -64,6 +67,7 @@ public class DatabaseAdaptor {
         contentValues.put(DatabaseHelper.NAME, name);
         contentValues.put(DatabaseHelper.CHURCH_LOCATION, churchlocation);
         contentValues.put(DatabaseHelper.CONTACTS, contacts);
+        contentValues.put(DatabaseHelper.WEB, web);
         contentValues.put(DatabaseHelper.SERMONS, sermons);
         contentValues.put(DatabaseHelper.CATEGORY, category);
         contentValues.put(DatabaseHelper.LONGITUDE, longitude);
@@ -177,6 +181,23 @@ public class DatabaseAdaptor {
     }
 
 
+    /**GET MARKER DATA**/
+
+
+    public Cursor getMarkerDataRowByID(String churchId) {
+
+
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE1_NAME + " WHERE " + ID + " = '" + churchId + "'", null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+
+    }
+
+
 
     /**GET ROWS BY CATEGORY**/
 
@@ -227,6 +248,7 @@ public class DatabaseAdaptor {
         contentValues.put(DatabaseHelper.NAME, name);
         contentValues.put(DatabaseHelper.CHURCH_LOCATION, churchlocation);
         contentValues.put(DatabaseHelper.CONTACTS, contacts);
+
         contentValues.put(DatabaseHelper.SERMONS, sermons);
         contentValues.put(DatabaseHelper.CATEGORY, category);
         contentValues.put(DatabaseHelper.LONGITUDE, longitude);
@@ -322,17 +344,21 @@ public class DatabaseAdaptor {
     public static class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "Addis_churches";
 
-        private static final Integer DATABASE_VERSION = 4;
+        private static final Integer DATABASE_VERSION = 5;
 
         private static final String TABLE1_NAME = "church_table";
         private static final String TABLE2_NAME = "events_table";
         private static final String TABLE3_NAME = "denominations_table";
+        private static final String TABLE4_NAME = "schedules_table";
+        private static final String TABLE5_NAME = "schedules_category_table";
+
 
         private static final String ID  = "_id";
 
         private static final String NAME  = "_church_name";
         private static final String CHURCH_LOCATION  = "_location";
         private static final String CONTACTS  = "_contacts";
+        private static final String WEB="_website";
         private static final String SERMONS="_sermons";
         private static final String CATEGORY="_church_category";
         private static final String LONGITUDE="_longitude";
@@ -349,7 +375,7 @@ public class DatabaseAdaptor {
 
 
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE1_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + NAME + " VARCHAR(255), " + CHURCH_LOCATION + " VARCHAR(255)," + CONTACTS +" VARCHAR(255), "+ SERMONS + " VARCHAR(255), " + CATEGORY + " VARCHAR(255), " + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + ImageLoction + " VARCHAR(255),"+ ImageUrl + " VARCHAR(255));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE1_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + NAME + " VARCHAR(255), " + CHURCH_LOCATION + " VARCHAR(255)," + CONTACTS +" VARCHAR(255)," + WEB + " VARCHAR(255), "+ SERMONS + " VARCHAR(255), " + CATEGORY + " VARCHAR(255), " + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + ImageLoction + " VARCHAR(255),"+ ImageUrl + " VARCHAR(255));";
         private static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + EVENTNAME + " VARCHAR(255), " + EVENTCHURCHNAME + " VARCHAR(255)," + EVENTADDRESS +" VARCHAR(255), "+ DATE + " VARCHAR(255), " + TIME + " VARCHAR(255));";
         private static final String CREATE_TABLE3 = "CREATE TABLE " + TABLE3_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + CATEGORY + " VARCHAR(255));";
 

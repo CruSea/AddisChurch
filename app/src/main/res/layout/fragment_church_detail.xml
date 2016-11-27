@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:id="@+id/map"
+                    android:id="@+id/mapdetail"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintVertical_bias="0.0" />
 
@@ -102,7 +102,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/phoneno"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
@@ -142,7 +142,7 @@
 
 
                 <TextView
-                    android:id="@+id/serviceLink"
+                    android:id="@+id/web"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -182,7 +182,7 @@
                     android:layout_below="@+id/textView11"
                     android:text="Sunday 5:30-7:30"
                     android:textColor="#000"
-                    android:id="@+id/schedul_detail"
+                    android:id="@+id/sermon"
                     />
 
             </RelativeLayout>
