@@ -41,14 +41,18 @@ public class AddisChurch extends Application {
 
 
 
-         DbHelper.InsertChurch( "1", "Bole MKC", "bole","0913609212" , "bolemkc.com","Sunday 3-5" ,"MKC","38.817945","9.019339","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-        DbHelper.InsertChurch( "2", "yeka MKC", "bole","0913609212" , "yekamkc.com", "Sunday 3-5" ,"MKC","1","","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-        DbHelper.InsertChurch( "3", "mexico MKC", "bole","0913609212" , "mexicomkc.com","Sunday 3-5" ,"MKC","1","","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+         DbHelper.InsertChurch( "1", "Bole MKC", "bole","0913609212" , "bolemkc.com","Sunday 3-5" ,"MKC","38.828731","8.991639","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "2", "yeka MKC", "bole","0913609212" , "yekamkc.com", "Sunday 3-5" ,"MKC","1","38.785429","8.999935","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "3", "mexico MKC", "bole","0913609212" , "mexicomkc.com","Sunday 3-5" ,"MKC","9.026339","38.817945","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "4", "bezainternational", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","9.0094697","38.8033294","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "6", "try", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","38.8033294","9.0094697","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
 
-        DbHelper.InsertChurchdenomination( "1", "Muluwongel");
-        DbHelper.InsertChurchdenomination( "2", "Yougo");
-        DbHelper.InsertChurchdenomination( "3", "kalehiwot");
-        DbHelper.InsertChurchdenomination( "4", "MKC");
+
+        DbHelper.InsertChurchdenomination( "1", "Muluwongel","","");
+        DbHelper.InsertChurchdenomination( "2", "Yougo","","");
+        DbHelper.InsertChurchdenomination( "3", "kalehiwot","","");
+        DbHelper.InsertChurchdenomination( "4", "MKC","","");
+        DbHelper.InsertChurchdenomination( "5", "bezainternational","","");
 
 
     }

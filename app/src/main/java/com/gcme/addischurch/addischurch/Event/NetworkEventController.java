@@ -1,6 +1,4 @@
-package com.gcme.addischurch.addischurch.DB;
-
-
+package com.gcme.addischurch.addischurch.Event;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,17 +10,18 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Created by buty on 11/15/16.
+ * Created by buty on 11/27/16.
  */
-public class EventNetworkController {
+
+public class NetworkEventController {
 
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private static Context mCtx;
-    private static EventNetworkController mInstance;
+    private static NetworkEventController mInstance;
 
-    private EventNetworkController(Context context) {
+    private NetworkEventController(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
         // This will Load Images from Network in Separate Thread
@@ -44,9 +43,9 @@ public class EventNetworkController {
                 });
     }
 
-    public static synchronized EventNetworkController getInstance(Context context) {
+    public static synchronized NetworkEventController getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new EventNetworkController(context);
+            mInstance = new NetworkEventController(context);
         }
         return mInstance;
     }

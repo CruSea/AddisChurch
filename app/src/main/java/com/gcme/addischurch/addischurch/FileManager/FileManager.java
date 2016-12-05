@@ -3,7 +3,6 @@ package com.gcme.addischurch.addischurch.FileManager;
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,7 +41,7 @@ public class FileManager {
 
 
         createFolder("images");
-
+        createFolder("denominations");
 
 
     }

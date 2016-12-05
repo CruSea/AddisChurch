@@ -48,9 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_walk"
-            android:layout_above="@+id/fab"
-            android:layout_alignStart="@+id/fab"
-            android:layout_alignLeft="@+id/fab"
+            android:layout_above="@+id/mylocation"
+            android:layout_alignStart="@+id/mylocation"
+            android:layout_alignLeft="@+id/mylocation"
             app:layout_constraintBottom_toBottomOf="@+id/car"
             android:layout_marginEnd="16dp"
             app:layout_constraintRight_toRightOf="@+id/content_main"
@@ -63,9 +63,9 @@
             android:visibility="invisible"
             android:src="@android:drawable/ic_menu_directions"
 
-            android:layout_alignTop="@+id/fab"
-            android:layout_toStartOf="@+id/fab"
-            android:layout_toLeftOf="@+id/fab"
+            android:layout_alignTop="@+id/mylocation"
+            android:layout_toStartOf="@+id/mylocation"
+            android:layout_toLeftOf="@+id/mylocation"
             app:layout_constraintBottom_toBottomOf="@+id/map"
             app:layout_constraintRight_toRightOf="@+id/map"
             android:layout_marginBottom="24dp"
@@ -73,7 +73,7 @@
             android:layout_marginRight="16dp" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/mylocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"

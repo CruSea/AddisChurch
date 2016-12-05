@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChurchDetail extends Fragment {
+/**
+ * Created by kzone on 11/28/2016.
+ */
+
+public class MyChurch extends Fragment {
     DatabaseAdaptor DbHelper;
     public static GoogleMap mMap;
     SupportMapFragment sMapFragment;
@@ -64,164 +67,32 @@ public class ChurchDetail extends Fragment {
     RecyclerView recyclerView;
     List<EventHandler> feedsList = new ArrayList<EventHandler>();
     RecyclerEventAdapter adapter;
-    public ChurchDetail() {
+    public MyChurch() {
         // Required empty public constructor
     }
 
-     @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                     Bundle savedInstanceState) {
-                View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
+                             Bundle savedInstanceState) {
+        View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
 /**recieve the church name**/
 
-         contactsview = (TextView) view.findViewById(R.id.phoneno);
-         webview = (TextView) view.findViewById(R.id.web);
-         sermonview = (TextView) view.findViewById(R.id.sermon);
-         BannerImage= (ImageView) view.findViewById(R.id.headerimage);
+        contactsview = (TextView) view.findViewById(R.id.phoneno);
+        webview = (TextView) view.findViewById(R.id.web);
+        sermonview = (TextView) view.findViewById(R.id.sermon);
+        BannerImage= (ImageView) view.findViewById(R.id.headerimage);
 
-                if(getArguments().getString("Key")!=null) {
-                    SelectedSearchitem = getArguments().getString("Key");
-                    String Selecteditemid = getArguments().getString("Keyid");
-                    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-                    toolbar.inflateMenu(R.menu.main);
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.inflateMenu(R.menu.main);
 
-                    toolbar.setTitle(SelectedSearchitem);
+            toolbar.setTitle("My Church");
 
 
 
 
 
-
-
-
-
-
-
-                        FillContents(Selecteditemid);
-
-
-
-
-
-                }
-
-
-         if(getArguments().getString("markname")!=null) {
-             Selectedmarkname = getArguments().getString("markname");
-
-
-             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-             toolbar.inflateMenu(R.menu.main);
-
-             toolbar.setTitle(Selectedmarkname);
-
-
-
-             fillbyname(Selectedmarkname);
-
-
-
-
-
-//             DbHelper = new DatabaseAdaptor(getActivity());
-//
-//             Cursor cursor = DbHelper.getMarkerDataRowByname(Selectedmarkname);
-//             if (cursor != null) {
-//                 final String Longitude = cursor.getString(cursor.getColumnIndex(DbHelper.LONGITUDE));
-//                 final String Latitude = cursor.getString(cursor.getColumnIndex(DbHelper.LATITUDE));
-
-
-                 FloatingActionButton getdirection = (FloatingActionButton) view.findViewById(R.id.detailgetdirection);
-                 getdirection.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
-
-
-                         Home_fragment secondFrag = new Home_fragment();
-                         Bundle args = new Bundle();
-//                         args.putString("Longitude",Longitude);
-//                         args.putString("Latitude",Latitude);
-
-                         secondFrag.setArguments(args);
-                         getFragmentManager()
-                                 .beginTransaction()
-                                 .replace(R.id.fragment_container, secondFrag)
-                                 .addToBackStack(null)
-                                 .commit();
-
-
-                     }
-                 });
-
-
-             }
-
-
-
-
-
-         //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-             recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewevent);
-         adapter = new RecyclerEventAdapter(getActivity(), feedsList);
-         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
-         recyclerView.setHasFixedSize(false);
-         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-         recyclerView.setAdapter(adapter);
-
-         queue = NetworkEventController.getInstance(getActivity()).getRequestQueue();
-         //Volley's inbuilt class to make Json array request
-         JsonArrayRequest newsReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-             @Override
-             public void onResponse(JSONArray response) {
-
-                 for (int i = 0; i < response.length(); i++) {
-                     try {
-
-                         JSONObject obj = response.getJSONObject(i);
-                         EventHandler feeds = new EventHandler(obj.getString("name"), obj.getString("image"),obj.getString("source"));
-
-                         // adding movie to movies array
-                         feedsList.add(feeds);
-
-                     } catch (Exception e) {
-                         System.out.println(e.getMessage());
-
-                     } finally {
-                         //Notify adapter about data changes
-                         adapter.notifyItemChanged(i);
-                     }
-                 }
-             }
-         }, new Response.ErrorListener() {
-             @Override
-             public void onErrorResponse(VolleyError error) {
-                 System.out.println(error.getMessage());
-             }
-         });
-         //Adding JsonArrayRequest to Request Queue
-         queue.add(newsReq);
-
-
-
-
-
-
-         return view;
-            }
+        return view;
+    }
 
     private void fillbyname(String selectedmarkname) {
 
@@ -433,13 +304,13 @@ public class ChurchDetail extends Fragment {
     void addMarker(String Lat,String Long){
 
 
-                if (!Long.equals("")&&!Lat.equals("")) {
-                    Double latit = Double.parseDouble(Lat);
-                    Double longi = Double.parseDouble(Long);
-                    LatLng pos = new LatLng(latit, longi);
-                    pinpoint(SelectedSearchitem,pos);
+        if (!Long.equals("")&&!Lat.equals("")) {
+            Double latit = Double.parseDouble(Lat);
+            Double longi = Double.parseDouble(Long);
+            LatLng pos = new LatLng(latit, longi);
+            pinpoint(SelectedSearchitem,pos);
 
-                }
+        }
 
     }
     private void pinpoint(String cname, LatLng pos) {

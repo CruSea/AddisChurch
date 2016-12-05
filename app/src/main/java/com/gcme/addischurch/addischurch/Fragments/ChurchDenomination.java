@@ -184,16 +184,6 @@ public class ChurchDenomination extends Fragment {
         });
 
 
-/**this is the search list on click*/
-        ListView searchlist = (ListView) view.findViewById(R.id.search_suggestion_list);
-        searchlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String selectedName = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.NAME));
-                Toast.makeText(getActivity(), selectedName, Toast.LENGTH_LONG).show();
-            }
-        });
 
 
         return view;
@@ -242,7 +232,7 @@ public class ChurchDenomination extends Fragment {
                 DbHelper = new DatabaseAdaptor(getActivity());
                 Cursor cursor = DbHelper.getCategoryListByKeyword(newQuery);
                 ListView activeList = (ListView) getView().findViewById(R.id.activelist);
-                ListView searchList = (ListView) getView().findViewById(R.id.search_suggestion_list);
+
 
 
                 Cursor cu = DbHelper.getAll();
@@ -253,7 +243,7 @@ public class ChurchDenomination extends Fragment {
 
                     /**suggestion List view Load **/
 
-                    ListView listView2 = (ListView) getView().findViewById(R.id.search_suggestion_list);
+                    ListView listView2 = (ListView) getView().findViewById(R.id.activelist);
                     listView2.setAdapter(CurAdapter2);
                     CurAdapter2.swapCursor(cursor);
 
@@ -262,21 +252,21 @@ public class ChurchDenomination extends Fragment {
 
                 if (newQuery.length() > 0) {
 
-                    activeList.setVisibility(View.INVISIBLE);
+                    activeList.setVisibility(View.VISIBLE);
 
                     if (cursor == null) {
 
-                        searchList.setVisibility(View.INVISIBLE);
+                        activeList.setVisibility(View.INVISIBLE);
 
                     } else {
 
-                        searchList.setVisibility(View.VISIBLE);
+                        activeList.setVisibility(View.VISIBLE);
                     }
 
 
                 } else {
-                    activeList.setVisibility(View.VISIBLE);
-                    searchList.setVisibility(View.INVISIBLE);
+
+                    activeList.setVisibility(View.INVISIBLE);
 
                 }
 

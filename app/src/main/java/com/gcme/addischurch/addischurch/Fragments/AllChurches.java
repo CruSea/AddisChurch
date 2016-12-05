@@ -119,7 +119,7 @@ public class AllChurches extends Fragment {
                          no= "0";
                     }
 
-                    String imagename=c.getString(c.getColumnIndex(DbHelper.ID))+".jpg";
+                    String imagename=c.getString(c.getColumnIndex(DbHelper.CATEGORY))+".jpg";
                     String ImageLocationid = FM.getFileAt("images", imagename).getAbsolutePath();
                     File file = new File(ImageLocationid);
 

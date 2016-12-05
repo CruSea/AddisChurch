@@ -85,27 +85,27 @@ public class SyncService extends JobService {
 
 
 
-//    if(cursor.getCount()==0){
-//
-//            new insertBackgroundTask().execute();
-//            parseInsertJSON();
-//
-//
-//        }else {
-////            new deleteBackgroundTask().execute();
-////            parseDeleteJSON();
-////
-////
-////            new updateBackgroundTask().execute();
-////            parseUpdateJSON();
-//
-//            new insertBackgroundTask().execute();
-//            parseInsertJSON();
+    if(cursor.getCount()==0){
+
+            new insertBackgroundTask().execute();
+            parseInsertJSON();
+
+
+        }else {
+//            new deleteBackgroundTask().execute();
+//            parseDeleteJSON();
 //
 //
-//
-//
-//            }
+//            new updateBackgroundTask().execute();
+//            parseUpdateJSON();
+
+            new insertBackgroundTask().execute();
+            parseInsertJSON();
+
+
+
+
+            }
 
             jobFinished(params, false);
             return false;
@@ -146,7 +146,7 @@ public class SyncService extends JobService {
 
         @Override
         protected void onPreExecute() {
-            json_url="http://kartauniverse.com/Json_get_data.php";
+            json_url="http://192.168.11.173:21872/api/churche";
 
 
         }
@@ -301,17 +301,17 @@ public class SyncService extends JobService {
                 while (count < jsonArray.length()) {
 
                     JSONObject JO = jsonArray.getJSONObject(count);
-                    ID = JO.getString(DbHelper.ID);
-                    name= JO.getString(DbHelper.NAME);
-                    churchlocation =JO.getString(DbHelper.CHURCH_LOCATION);
-                    contacts=JO.getString(DbHelper.CONTACTS);
-                    web=JO.getString(DbHelper.WEB);
+                    ID = JO.getString("id");
+                    name= JO.getString("name");
+                    churchlocation =JO.getString("location");
+                    contacts=JO.getString("phone");
+                    web=JO.getString("weburl");
                     sermons=JO.getString(DbHelper.SERMONS);
-                    category=JO.getString(DbHelper.CATEGORY);
-                    longitude=JO.getString(DbHelper.LONGITUDE);
-                    latitude=JO.getString(DbHelper.LATITUDE);
+                    category=JO.getString("denomination");
+                    longitude=JO.getString("longitude");
+                    latitude=JO.getString("lattiude");
 
-                    ImageLoction = JO.getString("_imagesLocation");
+                    ImageLoction = "";
                     ImageUrl = JO.getString("_ImageUrl");
                         /**This method will add the json data to the database**/
                         addData(ID, name ,  churchlocation , contacts, web, sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
@@ -327,75 +327,75 @@ public class SyncService extends JobService {
 
     }
 
-
-    public void parseDeleteJSON(){
-
-        if(json_string==null){
-            //Toast.makeText(getApplicationContext(),"First Get Json",Toast.LENGTH_LONG).show();
-        }else {
-            try {
-               // Message.message(this, "parsing started");
-                jsonObject = new JSONObject(json_string);
-                jsonArray = jsonObject.getJSONArray("server_response");
-                int count = 0;
-                String Id;
-                while (count < jsonArray.length()) {
-
-                    JSONObject JO = jsonArray.getJSONObject(count);
-                    Id = JO.getString("_id");
-
-                    deleteData(Id);
-                        count++;
-
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    public void parseUpdateJSON(){
-
-        if(json_string==null){
-            //Toast.makeText(getApplicationContext(),"First Get Json",Toast.LENGTH_LONG).show();
-        }else {
-            try {
-               // Message.message(this, "parsing started");
-                jsonObject = new JSONObject(json_string);
-                jsonArray = jsonObject.getJSONArray("server_response");
-                int count = 0;
-                String ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl;
-                while (count < jsonArray.length()) {
-
-                    JSONObject JO = jsonArray.getJSONObject(count);
-                    ID = JO.getString(DbHelper.ID);
-                    name= JO.getString(DbHelper.NAME);
-                    churchlocation =JO.getString(DbHelper.CHURCH_LOCATION);
-                            contacts=JO.getString(DbHelper.CONTACTS);
-                    sermons=JO.getString(DbHelper.SERMONS);
-                            category=JO.getString(DbHelper.CATEGORY);
-                    longitude=JO.getString(DbHelper.LONGITUDE);
-                            latitude=JO.getString(DbHelper.LATITUDE);
-
-                    ImageLoction = JO.getString("_imagesLocation");
-                    ImageUrl = JO.getString("_ImageUrl");
-
-                      updateData(ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
-                        count++;
-
-
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
+//
+//    public void parseDeleteJSON(){
+//
+//        if(json_string==null){
+//            //Toast.makeText(getApplicationContext(),"First Get Json",Toast.LENGTH_LONG).show();
+//        }else {
+//            try {
+//               // Message.message(this, "parsing started");
+//                jsonObject = new JSONObject(json_string);
+//                jsonArray = jsonObject.getJSONArray("server_response");
+//                int count = 0;
+//                String Id;
+//                while (count < jsonArray.length()) {
+//
+//                    JSONObject JO = jsonArray.getJSONObject(count);
+//                    Id = JO.getString("_id");
+//
+//                    deleteData(Id);
+//                        count++;
+//
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
+//
+//    public void parseUpdateJSON(){
+//
+//        if(json_string==null){
+//            //Toast.makeText(getApplicationContext(),"First Get Json",Toast.LENGTH_LONG).show();
+//        }else {
+//            try {
+//               // Message.message(this, "parsing started");
+//                jsonObject = new JSONObject(json_string);
+//                jsonArray = jsonObject.getJSONArray("server_response");
+//                int count = 0;
+//                String ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl;
+//                while (count < jsonArray.length()) {
+//
+//                    JSONObject JO = jsonArray.getJSONObject(count);
+//                    ID = JO.getString(DbHelper.ID);
+//                    name= JO.getString(DbHelper.NAME);
+//                    churchlocation =JO.getString(DbHelper.CHURCH_LOCATION);
+//                            contacts=JO.getString(DbHelper.CONTACTS);
+//                    sermons=JO.getString(DbHelper.SERMONS);
+//                            category=JO.getString(DbHelper.CATEGORY);
+//                    longitude=JO.getString(DbHelper.LONGITUDE);
+//                            latitude=JO.getString(DbHelper.LATITUDE);
+//
+//                    ImageLoction = JO.getString("_imagesLocation");
+//                    ImageUrl = JO.getString("_ImageUrl");
+//
+//                      updateData(ID, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
+//                        count++;
+//
+//
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
+//
+//
 
 
     /**Insert data from JSON Request**/
@@ -418,45 +418,45 @@ public class SyncService extends JobService {
     }
     }
 
-    /**puts delete lines from JSON Request**/
-    public void deleteData(String Id) {
 
-        DbHelper =new DatabaseAdaptor(this);
-       // Message.message(this, "delete called");
-        long id = DbHelper.deleteData(Id);
-       // Message.message(this, "delete second");
-        if (id < 0) {
-
-          //  Message.message(this, "data not deleted");
-        } else {
-
-          //  Message.message(this, "data deleted");
-        }
-
-
-    }
-
-
-    /**puts update lines from JSON Request**/
-    public void updateData(String Id,String name ,  String churchlocation , String contacts, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
+//    }/**puts delete lines from JSON Request**/
+//    public void deleteData(String Id) {
+//
+//        DbHelper =new DatabaseAdaptor(this);
+//        // Message.message(this, "delete called");
+//        long id = DbHelper.deleteData(Id);
+//        // Message.message(this, "delete second");
+//        if (id < 0) {
+//
+//            //  Message.message(this, "data not deleted");
+//        } else {
+//
+//            //  Message.message(this, "data deleted");
+//        }
+//
 
 
-        DbHelper =new DatabaseAdaptor(this);
 
-        long id = DbHelper.updateData(Id, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
-        if (id < 0) {
-
-           // Message.message(this, "delete failed");
-        } else {
-
-           // Message.message(this, "delete Successful");
-        }
-
-    }
+//        /**puts update lines from JSON Request**/
+//    public void updateData(String Id,String name ,  String churchlocation , String contacts, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
+//
+//
+//        DbHelper =new DatabaseAdaptor(this);
+//
+//        long id = DbHelper.updateData(Id, name ,  churchlocation , contacts,  sermons, category,  longitude,latitude, ImageLoction ,  ImageUrl);
+//        if (id < 0) {
+//
+//           // Message.message(this, "delete failed");
+//        } else {
+//
+//           // Message.message(this, "delete Successful");
+//        }
+//
+//    }
 
 
     /**Download Image and Rename**/
-    private class DownloadImageandRename {
+    private class DownloadImagaeandRename {
 
         void DownloadandRename(){
             Cursor c = DbHelper.getAll();
