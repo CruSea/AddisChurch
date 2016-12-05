@@ -65,6 +65,7 @@ public class Home_fragment extends Fragment {
     boolean isNetworkEnabled = false;
     public static GoogleMap mMap;
     ProgressBar mProgressBar;
+    Polyline  polylin;
     private boolean mIsDarkSearchTheme = false;
 
     @Override
@@ -719,15 +720,23 @@ public class Home_fragment extends Fragment {
             public void handleMessage(Message msg) {
                 try {
 
+                    if (polylin != null) {
+                        mMap.clear();
+                        addMarker();
+                    }
+                    PolylineOptions rectLine;
+
+
                     Document doc = (Document) msg.obj;
                     GMapV2Direction md = new GMapV2Direction();
                     ArrayList<LatLng> directionPoint = md.getDirection(doc);
-                    PolylineOptions rectLine = new PolylineOptions().width(15).color(getResources().getColor(R.color.wallet_holo_blue_light));
+                    rectLine = new PolylineOptions().width(15).color(getResources().getColor(R.color.wallet_holo_blue_light));
 
                     for (int i = 0; i < directionPoint.size(); i++) {
                         rectLine.add(directionPoint.get(i));
                     }
-                    Polyline polylin = mMap.addPolyline(rectLine);
+                    polylin = mMap.addPolyline(rectLine);
+
                     String time=md.getDurationText(doc);
                     //Toast.makeText(getApplicationContext(),"you will get there in "+time+" minutes", Toast.LENGTH_LONG).show();
                     float zoom = 17;

@@ -2,19 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-<<<<<<< HEAD
+
     android:layout_height="match_parent">
-=======
-    android:layout_height="match_parent"
-    tools:context="butykom.jsoncardview.MainActivity">
->>>>>>> e49559fdfa032e2212465622fcf8a0a64c4b0be7
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-<<<<<<< HEAD
         android:layout_marginTop="18dp"
         android:layout_below="@+id/spinner2"
         android:layout_alignParentLeft="true"

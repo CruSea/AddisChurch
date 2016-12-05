@@ -14,11 +14,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-=======
+
 import android.view.View;
 
->>>>>>> e49559fdfa032e2212465622fcf8a0a64c4b0be7
 import com.gcme.addischurch.addischurch.Event.MainEvent;
 import com.gcme.addischurch.addischurch.Fragments.AllChurches;
 import com.gcme.addischurch.addischurch.Fragments.Home_fragment;
@@ -89,13 +87,12 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
         } else if (id == R.id.nav_gallery) {
             startActivity(new Intent(MainActivity.this, MainEvent.class));
-<<<<<<< HEAD
-=======
+
 //            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //            ft.replace(R.id.fragment_container, new Events_fragment());
 //            ft.addToBackStack("tag_back_Events");
 //            ft.commit();
->>>>>>> e49559fdfa032e2212465622fcf8a0a64c4b0be7
+
         } else if (id == R.id.nav_slideshow) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, new AllChurches());
