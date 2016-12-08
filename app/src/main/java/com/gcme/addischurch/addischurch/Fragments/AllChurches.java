@@ -119,8 +119,8 @@ public class AllChurches extends Fragment {
                          no= "0";
                     }
 
-                    String imagename=c.getString(c.getColumnIndex(DbHelper.CATEGORY))+".jpg";
-                    String ImageLocationid = FM.getFileAt("images", imagename).getAbsolutePath();
+                    String imagename=c.getString(c.getColumnIndex(DbHelper.IDCAT))+".jpg";
+                    String ImageLocationid = FM.getFileAt("denominations", imagename).getAbsolutePath();
                     File file = new File(ImageLocationid);
 
 
@@ -132,7 +132,7 @@ public class AllChurches extends Fragment {
                         feedsList.add(feeds);
 
                         }else {
-                            ImageLocationid=FM.getFileAt("images","0.jpg").getAbsolutePath();
+                            ImageLocationid=FM.getFileAt("denominations","0.jpg").getAbsolutePath();
                             NewsFeeds feeds = new NewsFeeds(cname, ImageLocationid,no);
 
                             // adding movie to movies array

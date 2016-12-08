@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class ChurchDetail extends Fragment {
     FragmentManager manager;
 
     private RecyclerView mRecyclerView;
+    ImageButton favred, favwhite, churchred, churchwhite;
     private boolean mHorizontal;
     ProgressDialog pd;
     ArrayList<String> aa = new ArrayList<String>();
@@ -68,56 +71,116 @@ public class ChurchDetail extends Fragment {
         // Required empty public constructor
     }
 
-     @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                     Bundle savedInstanceState) {
-                View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
+                             Bundle savedInstanceState) {
+        View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
 /**recieve the church name**/
 
-         contactsview = (TextView) view.findViewById(R.id.phoneno);
-         webview = (TextView) view.findViewById(R.id.web);
-         sermonview = (TextView) view.findViewById(R.id.sermon);
-         BannerImage= (ImageView) view.findViewById(R.id.headerimage);
+        contactsview = (TextView) view.findViewById(R.id.phoneno);
+        webview = (TextView) view.findViewById(R.id.web);
+        sermonview = (TextView) view.findViewById(R.id.sermon);
+        BannerImage= (ImageView) view.findViewById(R.id.headerimage);
 
+        churchwhite = (ImageButton) view.findViewById(R.id.favhomechurch1);
+        churchred = (ImageButton) view.findViewById(R.id.favhomechurch2);
+        favred = (ImageButton) view.findViewById(R.id.favred);
+        favwhite = (ImageButton) view.findViewById(R.id.favwhite);
+        favwhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
                 if(getArguments().getString("Key")!=null) {
-                    SelectedSearchitem = getArguments().getString("Key");
                     String Selecteditemid = getArguments().getString("Keyid");
-                    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-                    toolbar.inflateMenu(R.menu.main);
-
-                    toolbar.setTitle(SelectedSearchitem);
-
-
-
-
-
-
-
-
-
-
-
-                        FillContents(Selecteditemid);
-
-
-
-
+                    DbHelper.Insertfav(Selecteditemid);
+                    Toast.makeText(getActivity(), "fav inserted", Toast.LENGTH_SHORT).show();
 
                 }
 
+                favwhite.setVisibility(View.GONE);
+                favred.setVisibility(View.VISIBLE);
+            }
+        });
+        favred.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-         if(getArguments().getString("markname")!=null) {
-             Selectedmarkname = getArguments().getString("markname");
+                if(getArguments().getString("Key")!=null) {
+                    String Selecteditemid = getArguments().getString("Keyid");
+
+                    DbHelper.deletefavData(Selecteditemid);
+                    Toast.makeText(getActivity(), "fav removed", Toast.LENGTH_SHORT).show();
+
+                }
+
+                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+
+                favwhite.setVisibility(View.VISIBLE);
+                favred.setVisibility(View.GONE);
+            }
+        });
+        churchwhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+
+                churchwhite.setVisibility(View.GONE);
+                churchred.setVisibility(View.VISIBLE);
+            }
+        });
+        churchred.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+
+                churchred.setVisibility(View.GONE);
+                churchwhite.setVisibility(View.VISIBLE);
+            }
+        });
 
 
-             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-             toolbar.inflateMenu(R.menu.main);
+        if(getArguments().getString("Key")!=null) {
+            SelectedSearchitem = getArguments().getString("Key");
+            String Selecteditemid = getArguments().getString("Keyid");
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.inflateMenu(R.menu.main);
 
-             toolbar.setTitle(Selectedmarkname);
+            toolbar.setTitle(SelectedSearchitem);
 
 
 
-             fillbyname(Selectedmarkname);
+
+
+
+
+
+
+
+
+            FillContents(Selecteditemid);
+
+
+
+
+
+        }
+
+
+        if(getArguments().getString("markname")!=null) {
+            Selectedmarkname = getArguments().getString("markname");
+
+
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.inflateMenu(R.menu.main);
+
+            toolbar.setTitle(Selectedmarkname);
+
+
+
+            fillbyname(Selectedmarkname);
 
 
 
@@ -131,39 +194,36 @@ public class ChurchDetail extends Fragment {
 //                 final String Latitude = cursor.getString(cursor.getColumnIndex(DbHelper.LATITUDE));
 
 
-                 FloatingActionButton getdirection = (FloatingActionButton) view.findViewById(R.id.detailgetdirection);
-                 getdirection.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
+            FloatingActionButton getdirection = (FloatingActionButton) view.findViewById(R.id.detailgetdirection);
+            getdirection.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
-                         Home_fragment secondFrag = new Home_fragment();
-                         Bundle args = new Bundle();
+                    Home_fragment secondFrag = new Home_fragment();
+                    Bundle args = new Bundle();
 //                         args.putString("Longitude",Longitude);
 //                         args.putString("Latitude",Latitude);
 
-                         secondFrag.setArguments(args);
-                         getFragmentManager()
-                                 .beginTransaction()
-                                 .replace(R.id.fragment_container, secondFrag)
-                                 .addToBackStack(null)
-                                 .commit();
+                    secondFrag.setArguments(args);
+                    getFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, secondFrag)
+                            .addToBackStack(null)
+                            .commit();
 
 
-                     }
-                 });
+                }
+            });
 
 
-             }
-
-
-
-
-
-         //}
+        }
 
 
 
+
+
+        //}
 
 
 
@@ -174,54 +234,57 @@ public class ChurchDetail extends Fragment {
 
 
 
-             recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewevent);
-         adapter = new RecyclerEventAdapter(getActivity(), feedsList);
-         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
-         recyclerView.setHasFixedSize(false);
-         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-
-         recyclerView.setAdapter(adapter);
-
-         queue = NetworkEventController.getInstance(getActivity()).getRequestQueue();
-         //Volley's inbuilt class to make Json array request
-         JsonArrayRequest newsReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-             @Override
-             public void onResponse(JSONArray response) {
-
-                 for (int i = 0; i < response.length(); i++) {
-                     try {
-
-                         JSONObject obj = response.getJSONObject(i);
-                         EventHandler feeds = new EventHandler(obj.getString("name"), obj.getString("image"),obj.getString("source"));
-
-                         // adding movie to movies array
-                         feedsList.add(feeds);
-
-                     } catch (Exception e) {
-                         System.out.println(e.getMessage());
-
-                     } finally {
-                         //Notify adapter about data changes
-                         adapter.notifyItemChanged(i);
-                     }
-                 }
-             }
-         }, new Response.ErrorListener() {
-             @Override
-             public void onErrorResponse(VolleyError error) {
-                 System.out.println(error.getMessage());
-             }
-         });
-         //Adding JsonArrayRequest to Request Queue
-         queue.add(newsReq);
 
 
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewevent);
+        adapter = new RecyclerEventAdapter(getActivity(), feedsList);
+        // recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
+        recyclerView.setAdapter(adapter);
 
+        queue = NetworkEventController.getInstance(getActivity()).getRequestQueue();
+        //Volley's inbuilt class to make Json array request
+        JsonArrayRequest newsReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
 
-         return view;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+
+                        JSONObject obj = response.getJSONObject(i);
+                        EventHandler feeds = new EventHandler(obj.getString("name"), obj.getString("image"),obj.getString("source"));
+
+                        // adding movie to movies array
+                        feedsList.add(feeds);
+
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+
+                    } finally {
+                        //Notify adapter about data changes
+                        adapter.notifyItemChanged(i);
+                    }
+                }
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+            }
+        });
+        //Adding JsonArrayRequest to Request Queue
+        queue.add(newsReq);
+
+
+
+
+
+
+        return view;
+    }
 
     private void fillbyname(String selectedmarkname) {
 
@@ -433,13 +496,13 @@ public class ChurchDetail extends Fragment {
     void addMarker(String Lat,String Long){
 
 
-                if (!Long.equals("")&&!Lat.equals("")) {
-                    Double latit = Double.parseDouble(Lat);
-                    Double longi = Double.parseDouble(Long);
-                    LatLng pos = new LatLng(latit, longi);
-                    pinpoint(SelectedSearchitem,pos);
+        if (!Long.equals("")&&!Lat.equals("")) {
+            Double latit = Double.parseDouble(Lat);
+            Double longi = Double.parseDouble(Long);
+            LatLng pos = new LatLng(latit, longi);
+            pinpoint(SelectedSearchitem,pos);
 
-                }
+        }
 
     }
     private void pinpoint(String cname, LatLng pos) {

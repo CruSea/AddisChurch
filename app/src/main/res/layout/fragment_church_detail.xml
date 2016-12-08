@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.gcme.addischurch.addischurch.Fragments.ChurchDetail">
 
-     TODO: Update blank fragment layout
+    TODO: Update blank fragment layout
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -35,15 +35,66 @@
 
 
             <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+                android:id="@+id/toolbar"
                 app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|end"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    >
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+
+                        android:id="@+id/favwhite"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@drawable/ic_heart_outline_white_24dp"
+                        />
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/favred"
+                        android:visibility="gone"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@drawable/favorange"
+                        />
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    >
+                    <ImageButton
+                        android:id="@+id/favhomechurch1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@drawable/homechurch"
+                        />
+                    <ImageButton
+                        android:id="@+id/favhomechurch2"
+                        android:layout_width="50dp"
+                        android:visibility="gone"
+                        android:layout_height="50dp"
+                        android:background="?android:attr/selectableItemBackground"                    android:src="@mipmap/homechurch"
+                        />
+                </RelativeLayout>
+
+            </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -67,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-           >
+                >
 
                 <fragment
                     android:layout_width="match_parent"
@@ -77,11 +128,11 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintVertical_bias="0.0" />
                 <android.support.design.widget.FloatingActionButton
-                android:id="@+id/detailgetdirection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_margin="@dimen/fab_margin"
+                    android:id="@+id/detailgetdirection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="@dimen/fab_margin"
                     android:src="@android:drawable/ic_menu_directions" />
 
             </FrameLayout>
@@ -100,9 +151,6 @@
                     android:id="@+id/ivContactItem1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-
-
-
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -196,11 +244,11 @@
             </RelativeLayout>
             <include layout="@layout/divider" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewevent"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="match_parent" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewevent"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent" />
 
 
 

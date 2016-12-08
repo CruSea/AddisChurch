@@ -81,6 +81,52 @@ public class SyncService extends JobService {
 
 
 
+        Cursor cu = DbHelper.getAlldenominations();
+
+
+
+        cu.moveToFirst();
+        if (cu.getCount() > 0) {
+            while (!cu.isAfterLast()) {
+                FileManager FM;
+                FM=new FileManager(this);
+                String ImageUrl= cu.getString(cu.getColumnIndex(DbHelper.CAT_IMG_URL));
+                //set image name as news id
+                String ImageNamefromCatagory=cu.getString(cu.getColumnIndex(DbHelper.IDCAT));
+
+                String imagename=(ImageNamefromCatagory+".jpg");
+                String ImageLocationbyid = FM.getFileAt("denominations", imagename).getAbsolutePath();
+                File file = new File(ImageLocationbyid);
+
+//                Cursor cu = DbHelper.getID(ImageNamefromId);
+                if (file.exists()) {
+
+                    //             Toast.makeText(getApplicationContext(), "Image "+ImageNamefromId+".jpg"+" already exists", Toast.LENGTH_LONG).show();
+                }
+                else{
+
+                    FD=new FileDownloader(getBaseContext(),ImageUrl,"denominations",ImageNamefromCatagory+".jpg");
+                    FD.execute();
+                    //                  Toast.makeText(getApplicationContext(), "Image DOWNLOADED", Toast.LENGTH_LONG).show();
+                    //                 mainobject.Slider();
+
+                }
+                cu.moveToNext();
+            }
+            cu.close();
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

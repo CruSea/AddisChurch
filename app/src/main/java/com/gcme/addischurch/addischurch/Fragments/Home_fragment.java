@@ -1,6 +1,7 @@
 package com.gcme.addischurch.addischurch.Fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,32 +9,43 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
+import com.gcme.addischurch.addischurch.JSON.SyncService;
 import com.gcme.addischurch.addischurch.R;
 import com.gcme.addischurch.addischurch.Routing.GMapV2Direction;
 import com.gcme.addischurch.addischurch.Routing.GMapV2DirectionAsyncTask;
+import com.gcme.addischurch.addischurch.listeners.GPSTracker;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -50,7 +62,7 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import static android.content.Context.LOCATION_SERVICE;
 
-public class Home_fragment extends Fragment {
+public class Home_fragment extends Fragment implements LocationListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -63,9 +75,18 @@ public class Home_fragment extends Fragment {
     private AppBarLayout mAppBar;
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
+    private boolean checkingLatLng = false;
     public static GoogleMap mMap;
     ProgressBar mProgressBar;
     Polyline  polylin;
+    private double currentLongitude;
+    private double currentLatitude;
+    LatLng CurrentLocation;
+    Marker mPositionMarker;
+    Boolean isMarkerRotating=false;
+
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION=11;
+    private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION=12;
     private boolean mIsDarkSearchTheme = false;
 
     @Override
@@ -162,6 +183,8 @@ public class Home_fragment extends Fragment {
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        checklocationpermission();
                         LocationManager locationManager;
                         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
 
@@ -181,17 +204,39 @@ public class Home_fragment extends Fragment {
                                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     return;
                                 }
-                                mProgressBar.setVisibility(View.VISIBLE);
-                                mMap.setMyLocationEnabled(true);
+
+                              //  mMap.setMyLocationEnabled(true);
                                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                                Location location = mMap.getMyLocation();
+                              //  Location location = mMap.getMyLocation();
+                                mProgressBar.setVisibility(View.VISIBLE);
+                                LatLng target =getCurrentLocation();
 
-                                if (location!= null) {
+                                if (target!= null) {
 
-                                    double mylLat = location.getLatitude();
-                                    double myLon = location.getLongitude();
+                                plotemylocation();
 
-                                    LatLng target = new LatLng(mylLat, myLon);
+
+
+
+
+
+
+
+
+
+//                                    mMap.clear();
+//                                    addMarker();
+//                                    MarkerOptions mp = new MarkerOptions();
+//
+//                                    mp.position(target);
+
+                                  //  mp.title("my position");
+
+                                   // mMap.addMarker(mp);
+//                                    double mylLat = location.getLatitude();
+//                                    double myLon = location.getLongitude();
+
+                                   // LatLng target = new LatLng(mylLat, myLon);
                                     FloatingActionButton fab2 = (FloatingActionButton) getView().findViewById(R.id.route);
                                     fab2.hide();
 
@@ -203,11 +248,12 @@ public class Home_fragment extends Fragment {
                                             .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                                             .build();                   //
 
-                                    mProgressBar.setVisibility(View.GONE);
+
                                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                                     mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                                         @Override
                                         public boolean onMyLocationButtonClick() {
+                                            mProgressBar.setVisibility(View.GONE);
                                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                                             return true;
                                         }
@@ -225,6 +271,8 @@ public class Home_fragment extends Fragment {
 
 
                     }
+
+
 
                 });
                 /** End of mylocation icon*/
@@ -258,10 +306,8 @@ public class Home_fragment extends Fragment {
                             if (isNetworkEnabled) {
                                 routefab.hide();
 
-                                mMap.setMyLocationEnabled(true);
-                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    return;
-                                }
+
+
                                 final FloatingActionButton walk = (FloatingActionButton) getView().findViewById(R.id.walk);
                                 walk.show();
                                 final FloatingActionButton car = (FloatingActionButton) getView().findViewById(R.id.car);
@@ -273,14 +319,16 @@ public class Home_fragment extends Fragment {
 
                                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
                                         mMap.getUiSettings().setMapToolbarEnabled(false);
-                                        Location location = mMap.getMyLocation();
-                                        if (location != null) {
-                                            if (location != null) {
-                                                double latitude = location.getLatitude();
-                                                double longitude = location.getLongitude();
+                                        checklocationpermission();
+                                        LatLng Currentlocation  =getCurrentLocation();
+                                       // Location location = mMap.getMyLocation();
+                                        if (Currentlocation != null) {
+                                           // if (location != null) {
+//                                                double latitude = location.getLatitude();
+//                                                double longitude = location.getLongitude();
 
 
-                                                final LatLng myLocation = new LatLng(latitude, longitude);
+                                                final LatLng myLocation = Currentlocation;
 
                                                 Intent intent = getActivity().getIntent();
                                                 String dLon = intent.getStringExtra("Lon");
@@ -292,7 +340,7 @@ public class Home_fragment extends Fragment {
 
                                                 String modedriving = "driving";
                                                 route(myLocation, destLocation, modedriving);
-                                            }
+                                           // }
                                         }
                                     }
                                 });
@@ -304,14 +352,16 @@ public class Home_fragment extends Fragment {
                                         car.hide();
                                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
                                         mMap.getUiSettings().setMapToolbarEnabled(false);
-                                        Location location = mMap.getMyLocation();
+                                        checklocationpermission();
+                                        LatLng Currentlocation  =getCurrentLocation();
+                                        // Location location = mMap.getMyLocation();
+                                        if (Currentlocation != null) {
+                                            // if (location != null) {
+//                                                double latitude = location.getLatitude();
+//                                                double longitude = location.getLongitude();
 
-                                        if (location != null) {
-                                            double latitude = location.getLatitude();
-                                            double longitude = location.getLongitude();
 
-
-                                            final LatLng myLocation = new LatLng(latitude, longitude);
+                                            final LatLng myLocation = Currentlocation;
 
                                             Intent intent = getActivity().getIntent();
                                             String dLon = intent.getStringExtra("Lon");
@@ -381,14 +431,21 @@ public class Home_fragment extends Fragment {
                                     if (isNetworkEnabled) {
                                         fab3.hide();
 
-                                        mMap.setMyLocationEnabled(true);
-                                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                            return;
-                                        }
+//                                        mMap.setMyLocationEnabled(true);
+//                                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                                            return;
+//                                        }
 
                                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
                                         mMap.getUiSettings().setMapToolbarEnabled(false);
-                                        final Location location = mMap.getMyLocation();
+
+
+
+
+
+
+
+
 
                                         final FloatingActionButton walk = (FloatingActionButton) getView().findViewById(R.id.walk);
                                         walk.show();
@@ -401,14 +458,14 @@ public class Home_fragment extends Fragment {
                                                 assert routwalk != null;
                                                 routwalk.hide();
                                                 Toast.makeText(getActivity(), "Please wait a moment !", Toast.LENGTH_LONG).show();
+                                                checklocationpermission();
+                                                LatLng Currentlocation  =getCurrentLocation();
+                                                if (Currentlocation != null) {
+                                                    if (Currentlocation != null) {
 
-                                                if (location != null) {
-                                                    if (location != null) {
-                                                        double latitude = location.getLatitude();
-                                                        double longitude = location.getLongitude();
 
 
-                                                        final LatLng myLocation = new LatLng(latitude, longitude);
+                                                        final LatLng myLocation = Currentlocation;
 
 
                                                         final LatLng destLocation = new LatLng( dmarkLat, dmarkLong);
@@ -430,12 +487,17 @@ public class Home_fragment extends Fragment {
                                                 Toast.makeText(getActivity(), "Please wait a moment !", Toast.LENGTH_LONG).show();
 
 
-                                                if (location != null) {
-                                                    double latitude = location.getLatitude();
-                                                    double longitude = location.getLongitude();
+                                                checklocationpermission();
+                                                LatLng Currentlocation  =getCurrentLocation();
 
 
-                                                    final LatLng myLocation = new LatLng(latitude, longitude);
+
+
+                                                if (Currentlocation != null) {
+
+
+
+                                                    final LatLng myLocation = Currentlocation;
 
 
                                                     final LatLng destLocation = new LatLng( dmarkLat, dmarkLong);
@@ -465,6 +527,36 @@ public class Home_fragment extends Fragment {
                 /** map Marker clicked finish*/
 
 
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+
+
+
+                        String ChurchName = marker.getTitle();
+
+
+                        ChurchDetail secondFrag = new ChurchDetail();
+                        Bundle args = new Bundle();
+
+                        args.putString("MarkerName",String.valueOf(ChurchName));
+
+                        secondFrag .setArguments(args);
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, secondFrag)
+                                .addToBackStack(null)
+                                .commit();
+
+
+
+                    }
+                });
+
+
+
+
             }
 
 
@@ -474,8 +566,42 @@ public class Home_fragment extends Fragment {
 
     }
 
+    private void plotemylocation() {
+
+        LatLng currentLocation = getCurrentLocation();
+
+        // Display the current location in the UI
+        if (currentLocation != null) {
+
+            if (mPositionMarker == null) {
+                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                        .position(currentLocation)
+                        .title("Eu")
+                        .icon(BitmapDescriptorFactory.fromResource((R.drawable.myloc))));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            } else
+                mPositionMarker.setPosition(currentLocation);
+
+        }
+    }
 
 
+    @TargetApi(23)
+    private void checklocationpermission() {
+
+
+            if ( Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(  new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION   },
+                        Home_fragment.MY_PERMISSION_ACCESS_FINE_LOCATION );
+                requestPermissions(  new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                        Home_fragment.MY_PERMISSION_ACCESS_COURSE_LOCATION );
+
+            }
+
+    }
 
 
     @Override
@@ -484,9 +610,38 @@ public class Home_fragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.content_main, container, false);
         mSearchView = (FloatingSearchView) view.findViewById(R.id.floating_search_view);
+
+
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mProgressBar.setIndeterminate(true);
 
+
+
+
+
+
+        DbHelper = new DatabaseAdaptor(getActivity());
+        if(DbHelper.getAll().getCount()==0){
+
+
+
+            FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.sync);
+            fab.show();
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "Turn On Internet connection and press the sync button !", Toast.LENGTH_LONG).show();
+
+
+                    getActivity().startService(new Intent(getActivity(),SyncService.class));
+
+                }
+            });
+
+        }else{
+            FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.sync);
+            fab.hide();
+        }
 
 
 
@@ -608,6 +763,26 @@ public class Home_fragment extends Fragment {
     }
 
 
+    public LatLng getCurrentLocation() {
+
+        GPSTracker gps = new GPSTracker(getActivity());
+
+        if (gps.canGetLocation()) {
+            currentLatitude = gps.getLatitude();
+            currentLongitude = gps.getLongitude();
+            CurrentLocation = new LatLng(currentLatitude, currentLongitude);
+
+
+        } else {
+            gps.showSettingsAlert();
+            checkingLatLng = true;
+//            dialog.hide();
+        }
+
+        return CurrentLocation;
+
+    }
+
 
     private void setupSearchBar() {
         mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
@@ -722,6 +897,17 @@ public class Home_fragment extends Fragment {
 
                     if (polylin != null) {
                         mMap.clear();
+
+//
+//                        MarkerOptions mp = new MarkerOptions();
+//
+//                        mp.position(sourcePosition);
+//
+//                        //  mp.title("my position");
+//
+//                        mMap.addMarker(mp);
+
+
                         addMarker();
                     }
                     PolylineOptions rectLine;
@@ -731,7 +917,7 @@ public class Home_fragment extends Fragment {
                     GMapV2Direction md = new GMapV2Direction();
                     ArrayList<LatLng> directionPoint = md.getDirection(doc);
                     rectLine = new PolylineOptions().width(15).color(getResources().getColor(R.color.wallet_holo_blue_light));
-
+                    plotemylocation();
                     for (int i = 0; i < directionPoint.size(); i++) {
                         rectLine.add(directionPoint.get(i));
                     }
@@ -795,6 +981,294 @@ public class Home_fragment extends Fragment {
         mMap.addMarker(new MarkerOptions().position(pos).title(cname).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_map_pin)));
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case MY_PERMISSION_ACCESS_FINE_LOCATION:{
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+//                    Intent intent  = new Intent(MainActivity.this,MainActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+                }
+            }
+            case MY_PERMISSION_ACCESS_COURSE_LOCATION:{
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+//                    Intent intent  = new Intent(MainActivity.this,MainActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+
+
+
+
+        LatLng currentLocation = getCurrentLocation();
+
+        // Display the current location in the UI
+        if (location != null) {
+
+            if (mPositionMarker == null) {
+                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                        .position(   currentLocation
+                        )
+                        .title("Eu")
+                        .icon(BitmapDescriptorFactory.fromResource((R.drawable.myloc))));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            } else
+                mPositionMarker.setPosition( currentLocation);
+        }
+
+
+        rotateMarker(mPositionMarker,location.getBearing());
+
+
+//        LatLng currentLocation = getCurrentLocation();
+//
+//        // Display the current location in the UI
+//        if (currentLocation != null) {
+//
+//            if (mPositionMarker == null) {
+//                mPositionMarker = mMap.addMarker(new MarkerOptions()
+//                        .position(currentLocation)
+//                        .title("Eu")
+//                        .icon(BitmapDescriptorFactory.fromResource((R.drawable.myloc))));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+//            } else
+//                mPositionMarker.setPosition(currentLocation);
+//        }
+
+
+
+//
+//
+//        mPositionMarker = mMap.addMarker(new MarkerOptions()
+//                .flat(true)
+//                .icon(BitmapDescriptorFactory
+//                        .fromResource(R.drawable.myloc))
+//                .anchor(0.5f, 0.5f)
+//
+//                .position(new LatLng(location.getLatitude(),location.getLongitude())));
+//        LatLng mycurrentLatLng = new LatLng (location.getLatitude(), location.getLongitude());
+//
+//
+
+
+
+
+
+//        if (location == null)
+//            return;
+//
+//        if (mPositionMarker == null) {
+//
+//            mPositionMarker = mMap.addMarker(new MarkerOptions()
+//                    .flat(true)
+//                    .icon(BitmapDescriptorFactory
+//                            .fromResource(R.drawable.custom_map_pin))
+//                    .anchor(0.5f, 0.5f)
+//                    .position(
+//                            new LatLng(location.getLatitude(), location
+//                                    .getLongitude())));
+//        }
+//
+//        animateMarker(mPositionMarker, location); // Helper method for smooth
+//        // animation
+//
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location
+//                .getLatitude(), location.getLongitude())));
+//
+
+
+
+
+//
+//        mMap.clear();
+//        addMarker();
+//        MarkerOptions mp = new MarkerOptions();
+//
+//        mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+//
+//     //   mp.title("my position");
+//
+//        mMap.addMarker(mp);
+//
+////        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+////                new LatLng(location.getLatitude(), location.getLongitude()), 16));
+
+    }
+
+    private double bearingBetweenLocations(LatLng latLng1,LatLng latLng2) {
+
+        double PI = 3.14159;
+        double lat1 = latLng1.latitude * PI / 180;
+        double long1 = latLng1.longitude * PI / 180;
+        double lat2 = latLng2.latitude * PI / 180;
+        double long2 = latLng2.longitude * PI / 180;
+
+        double dLon = (long2 - long1);
+
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+                * Math.cos(lat2) * Math.cos(dLon);
+
+        double brng = Math.atan2(y, x);
+
+        brng = Math.toDegrees(brng);
+        brng = (brng + 360) % 360;
+
+        return brng;
+    }
+
+    private void rotateMarker(final Marker marker, final float toRotation) {
+        if(!isMarkerRotating) {
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+            final float startRotation = marker.getRotation();
+            final long duration = 2000;
+
+            final Interpolator interpolator = new LinearInterpolator();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    isMarkerRotating = true;
+
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = interpolator.getInterpolation((float) elapsed / duration);
+
+                    float rot = t * toRotation + (1 - t) * startRotation;
+
+                    float bearing =  -rot > 180 ? rot / 2 : rot;
+
+                    marker.setRotation(bearing);
+
+                    if (t < 1.0) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16);
+                    } else {
+                        isMarkerRotating = false;
+                    }
+                }
+            });
+        }
+    }
+
+    public void animateMarker(final Marker marker, final Location location) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final LatLng startLatLng = marker.getPosition();
+        final double startRotation = marker.getRotation();
+        final long duration = 500;
+
+        final Interpolator interpolator = new LinearInterpolator();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+
+                double lng = t * location.getLongitude() + (1 - t)
+                        * startLatLng.longitude;
+                double lat = t * location.getLatitude() + (1 - t)
+                        * startLatLng.latitude;
+
+                float rotation = (float) (t * location.getBearing() + (1 - t)
+                        * startRotation);
+
+                marker.setPosition(new LatLng(lat, lng));
+                marker.setRotation(rotation);
+
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                }
+            }
+        });
+    }
+//
+//    public void showWaitPopup() {
+//        new MaterialDialog.Builder(getActivity())
+//                .title(R.string.pls_wait)
+//                .content(R.string.gps_not_ready)
+//                .positiveText(R.string.OK)
+//                .show();
+//    }
+
+//    @Override
+//    public void onLocationChanged(Location location) {
+//
+//        if (location == null)
+//            return;
+//
+//        if (mPositionMarker == null) {
+//
+//            mPositionMarker = mMap.addMarker(new MarkerOptions()
+//                    .flat(true)
+//                    .icon(BitmapDescriptorFactory
+//                            .fromResource(R.drawable.positionIndicator))
+//                    .anchor(0.5f, 0.5f)
+//                    .position(
+//                            new LatLng(location.getLatitude(), location
+//                                    .getLongitude())));
+//        }
+//
+//        animateMarker(mPositionMarker, location); // Helper method for smooth
+//        // animation
+//
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location
+//                .getLatitude(), location.getLongitude())));
+//
+//    }
+//
+//    public void animateMarker(final Marker marker, final Location location) {
+//        final Handler handler = new Handler();
+//        final long start = SystemClock.uptimeMillis();
+//        final LatLng startLatLng = marker.getPosition();
+//        final double startRotation = marker.getRotation();
+//        final long duration = 500;
+//
+//        final Interpolator interpolator = new LinearInterpolator();
+//
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                long elapsed = SystemClock.uptimeMillis() - start;
+//                float t = interpolator.getInterpolation((float) elapsed
+//                        / duration);
+//
+//                double lng = t * location.getLongitude() + (1 - t)
+//                        * startLatLng.longitude;
+//                double lat = t * location.getLatitude() + (1 - t)
+//                        * startLatLng.latitude;
+//
+//                float rotation = (float) (t * location.getBearing() + (1 - t)
+//                        * startRotation);
+//
+//                marker.setPosition(new LatLng(lat, lng));
+//                marker.setRotation(rotation);
+//
+//                if (t < 1.0) {
+//                    // Post again 16ms later.
+//                    handler.postDelayed(this, 16);
+//                }
+//            }
+//        });
+//    }
+//
 
 
 

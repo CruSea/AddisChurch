@@ -51,7 +51,7 @@ public class AddisChurch extends Application {
         DbHelper.InsertChurchdenomination( "1", "Muluwongel","","");
         DbHelper.InsertChurchdenomination( "2", "Yougo","","");
         DbHelper.InsertChurchdenomination( "3", "kalehiwot","","");
-        DbHelper.InsertChurchdenomination( "4", "MKC","","");
+        DbHelper.InsertChurchdenomination( "4", "MKC","http://bulbulamkc.org/kkk.jpg","");
         DbHelper.InsertChurchdenomination( "5", "bezainternational","","");
 
 
