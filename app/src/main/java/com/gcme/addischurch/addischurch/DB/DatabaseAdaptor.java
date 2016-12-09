@@ -18,7 +18,7 @@ public class DatabaseAdaptor {
     String TABLE2_NAME = "events_table";
     String TABLE3_NAME = "denominations_table";
     String TABLE4_NAME = "fav_table";
-    String TABLE5_NAME = "sermons_category_table";
+    String TABLE5_NAME = "my_church";
 
     public String ID  = "_id";
 
@@ -51,7 +51,7 @@ public class DatabaseAdaptor {
 
     public String FavSelected  = "Fav_Selected";
 
-
+    private static final String Home_Church  = "home_church";
 
     public DatabaseAdaptor(Context context) {
         helper = new DatabaseHelper(context);
@@ -133,6 +133,8 @@ public class DatabaseAdaptor {
     }
 
 
+
+    /**Delete from database**/
     public long deletefavData(String Id) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -140,8 +142,47 @@ public class DatabaseAdaptor {
         long id= db.delete(TABLE4_NAME, FavSelected+"=?", new String[] {Id});
         return id;
 
+    }
+
+
+
+
+    public long InsertHome(String newhomeid) {
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.Home_Church, newhomeid);
+        long id = db.insert(DatabaseHelper.TABLE5_NAME, null, contentValues);
+        return id;
+    }
+
+
+
+
+    public Cursor gethome(){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from "+TABLE5_NAME,null);
+        return c;
 
     }
+
+
+    public void changehome() {
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+
+        db.execSQL("delete from "+ TABLE5_NAME);
+
+
+
+
+    }
+
+
+
+
 
 
 
@@ -357,6 +398,29 @@ public class DatabaseAdaptor {
         return cursor;
     }
 
+    public Cursor getChurchName(String favid) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String selectQuery =  "SELECT  rowid as " +
+                "_id" + "," +
+                NAME + "," +
+                CATEGORY +
+                " FROM " + TABLE1_NAME +
+                " WHERE " +  ID + "  LIKE  '%" +favid + "%' "
+                ;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+
+        if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
+
+    }
+
 /**END OF SEARCH**/
 
 
@@ -384,13 +448,13 @@ public class DatabaseAdaptor {
     public static class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "Addis_churches";
 
-        private static final Integer DATABASE_VERSION = 6;
+        private static final Integer DATABASE_VERSION = 9;
 
         private static final String TABLE1_NAME = "church_table";
         private static final String TABLE2_NAME = "events_table";
         private static final String TABLE3_NAME = "denominations_table";
-        private static final String TABLE4_NAME = "schedules_table";
-        private static final String TABLE5_NAME = "schedules_category_table";
+        private static final String TABLE4_NAME = "fav_table";
+        private static final String TABLE5_NAME = "my_church";
 
 
         private static final String ID  = "_id";
@@ -418,13 +482,17 @@ public class DatabaseAdaptor {
         private static final String EVENTCHURCHNAME="_event_church_name";
 
 
+        private static final String Home_Church  = "home_church";
+
+
         private static final String FavSelected  = "Fav_Selected";
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE1_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + NAME + " VARCHAR(255), " + CHURCH_LOCATION + " VARCHAR(255)," + CONTACTS +" VARCHAR(255)," + WEB + " VARCHAR(255), "+ SERMONS + " VARCHAR(255), " + CATEGORY + " VARCHAR(255), " + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + ImageLoction + " VARCHAR(255),"+ ImageUrl + " VARCHAR(255));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE1_NAME + "(" + ID + " integer PRIMARY KEY ," + NAME + " VARCHAR(255), " + CHURCH_LOCATION + " VARCHAR(255)," + CONTACTS +" VARCHAR(255)," + WEB + " VARCHAR(255), "+ SERMONS + " VARCHAR(255), " + CATEGORY + " VARCHAR(255), " + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + ImageLoction + " VARCHAR(255),"+ ImageUrl + " VARCHAR(255));";
         //private static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + EVENTNAME + " VARCHAR(255), " + EVENTCHURCHNAME + " VARCHAR(255)," + EVENTADDRESS +" VARCHAR(255), "+ DATE + " VARCHAR(255), " + TIME + " VARCHAR(255));";
         private static final String CREATE_TABLE3 = "CREATE TABLE " + TABLE3_NAME + "(" + IDCAT + " integer PRIMARY KEY AUTOINCREMENT," + CATEGORY + " VARCHAR(255)," + CAT_IMG_URL + " VARCHAR(255)," + CAT_IMG_LOC + " VARCHAR(255));";
 
         private static final String CREATE_TABLE4 = "CREATE TABLE " + TABLE4_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + FavSelected + " VARCHAR(255));";
+        private static final String CREATE_TABLE5 = "CREATE TABLE " + TABLE5_NAME + "(" + Home_Church + " VARCHAR(255));";
 
 
 
@@ -432,6 +500,7 @@ public class DatabaseAdaptor {
         // private static final String DROPE_TABLE2 = "DROP TABLE IF EXISTS " + TABLE2_NAME;
         private static final String DROPE_TABLE3 = "DROP TABLE IF EXISTS " + TABLE3_NAME;
         private static final String DROPE_TABLE4 = "DROP TABLE IF EXISTS " + TABLE4_NAME;
+        private static final String DROPE_TABLE5 = "DROP TABLE IF EXISTS " + TABLE5_NAME;
         private Context context;
 
         public DatabaseHelper(Context context) {
@@ -448,6 +517,7 @@ public class DatabaseAdaptor {
                 // db.execSQL(CREATE_TABLE2);
                 db.execSQL(CREATE_TABLE3);
                 db.execSQL(CREATE_TABLE4);
+                db.execSQL(CREATE_TABLE5);
                 Toast.makeText(context, "Database Created !", Toast.LENGTH_LONG).show();
 
 
@@ -466,7 +536,7 @@ public class DatabaseAdaptor {
                 // db.execSQL(DROPE_TABLE2);
                 db.execSQL(DROPE_TABLE3);
                 db.execSQL(DROPE_TABLE4);
-
+                db.execSQL(DROPE_TABLE5);
                 onCreate(db);
                 // Message.message(context, "upgrade");
             } catch (SQLException e) {

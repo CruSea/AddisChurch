@@ -1,9 +1,13 @@
 package com.gcme.addischurch.addischurch.Fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,10 +77,29 @@ public class MyChurch extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        DbHelper = new DatabaseAdaptor(getActivity());
+        Cursor cursor = DbHelper.gethome();
+        if (cursor.getCount() ==0) {
+            checkhome();
+        }
+
+
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
+        View view= inflater.inflate(R.layout.fragment_my_church, container, false);
 /**recieve the church name**/
+
+
+
+
 
         contactsview = (TextView) view.findViewById(R.id.phoneno);
         webview = (TextView) view.findViewById(R.id.web);
@@ -93,6 +117,54 @@ public class MyChurch extends Fragment {
 
         return view;
     }
+
+    private void checkhome() {
+
+
+
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+            alertDialog.setCancelable(false);
+            // Setting Dialog Title
+            alertDialog.setTitle("Wede Church");
+
+            // Setting Dialog Message
+            alertDialog.setMessage("You did not selected home church yet!");
+
+            // On pressing Settings button
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog,int which) {
+
+                    AllChurches secondFrag = new AllChurches();
+                    getFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, secondFrag)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Home_fragment secondFrag = new Home_fragment();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, secondFrag)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+
+            // Showing Alert Message
+            alertDialog.show();
+
+
+
+
+    }
+
+
+
 
     private void fillbyname(String selectedmarkname) {
 

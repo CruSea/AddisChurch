@@ -1,0 +1,132 @@
+package com.gcme.addischurch.addischurch.JSON;
+
+
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
+import com.gcme.addischurch.addischurch.FileManager.FileDownloader;
+import com.gcme.addischurch.addischurch.FileManager.FileManager;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import me.tatarka.support.job.JobParameters;
+import me.tatarka.support.job.JobService;
+
+/**This Class sync database with the server MYSQL Database**/
+public class RequestJson extends JobService {
+    DatabaseAdaptor DbHelper;
+
+    public RequestJson() {
+
+
+    }
+
+    @Override
+    public boolean onStartJob(JobParameters params) {
+        getchurches();
+        Toast.makeText(getApplicationContext(), "request sent!", Toast.LENGTH_LONG).show();
+
+        jobFinished(params, false);
+        return false;
+    }
+
+            /** This is a to insert a data into Church database from server**/
+    private void getchurches() {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "http://localchurch-001-site1.btempurl.com/api/churches";
+        JsonArrayRequest req = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+
+                        try {
+
+                    for (int i = 0; i < response.length(); i++) {
+
+
+                        JSONObject Jo = (JSONObject) response.get(i);
+                            String ID = Jo.getString("id");
+                            String churchname = Jo.getString("name");
+                            String churchlocation = Jo.getString("location");
+                            String contacts = Jo.getString("phone");
+                            String web = Jo.getString("weburl");
+                            String sermons = " ";
+                            String churchcategory = Jo.getString("denomination");
+                            String longitude = Jo.getString("longitude");
+                            String latitude = Jo.getString("latittude");
+                            String ImageUrl = Jo.getString("image");
+                            String ImageLoction = " ";
+                            addData(ID, churchname, churchlocation, contacts, web, sermons, churchcategory, longitude, latitude, ImageLoction, ImageUrl);
+                        }} catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),
+                                    "Error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        requestQueue.add(req);
+
+    }
+    public void addData(String Id, String name, String churchlocation, String contacts, String web, String sermons, String category, String longitude, String latitude, String ImageLoction, String ImageUrl) {
+        {
+
+
+            DbHelper = new DatabaseAdaptor(this);
+
+            long id = DbHelper.InsertChurch(Id, name, churchlocation, contacts, web, sermons, category, longitude, latitude, ImageLoction, ImageUrl);
+            if (id < 0) {
+                Toast.makeText(getApplicationContext(), "JSON insert failed!", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(getApplicationContext(), "JSON data successfully inserted!", Toast.LENGTH_LONG).show();
+
+            }
+
+
+        }
+
+
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+
+        return false;
+    }
+
+}

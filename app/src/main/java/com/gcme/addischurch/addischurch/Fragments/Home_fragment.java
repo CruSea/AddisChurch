@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
+import com.gcme.addischurch.addischurch.JSON.RequestJson;
 import com.gcme.addischurch.addischurch.JSON.SyncService;
 import com.gcme.addischurch.addischurch.R;
 import com.gcme.addischurch.addischurch.Routing.GMapV2Direction;
@@ -205,7 +206,7 @@ public class Home_fragment extends Fragment implements LocationListener {
                                     return;
                                 }
 
-                              //  mMap.setMyLocationEnabled(true);
+                                mMap.setMyLocationEnabled(true);
                                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                               //  Location location = mMap.getMyLocation();
                                 mProgressBar.setVisibility(View.VISIBLE);
@@ -213,7 +214,7 @@ public class Home_fragment extends Fragment implements LocationListener {
 
                                 if (target!= null) {
 
-                                plotemylocation();
+                               // plotemylocation();
 
 
 
@@ -633,7 +634,7 @@ public class Home_fragment extends Fragment implements LocationListener {
                     Toast.makeText(getActivity(), "Turn On Internet connection and press the sync button !", Toast.LENGTH_LONG).show();
 
 
-                    getActivity().startService(new Intent(getActivity(),SyncService.class));
+                    getActivity().startService(new Intent(getActivity(), RequestJson.class));
 
                 }
             });
@@ -694,7 +695,7 @@ public class Home_fragment extends Fragment implements LocationListener {
 
 
         } else {
-            Toast.makeText(getActivity(), "happy halowein!", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getActivity(), "happy halowein!", Toast.LENGTH_LONG).show();
 
         }
 
@@ -897,7 +898,11 @@ public class Home_fragment extends Fragment implements LocationListener {
 
                     if (polylin != null) {
                         mMap.clear();
-
+                        checklocationpermission();
+                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        mMap.setMyLocationEnabled(true);
 //
 //                        MarkerOptions mp = new MarkerOptions();
 //
@@ -917,7 +922,7 @@ public class Home_fragment extends Fragment implements LocationListener {
                     GMapV2Direction md = new GMapV2Direction();
                     ArrayList<LatLng> directionPoint = md.getDirection(doc);
                     rectLine = new PolylineOptions().width(15).color(getResources().getColor(R.color.wallet_holo_blue_light));
-                    plotemylocation();
+                   // plotemylocation();
                     for (int i = 0; i < directionPoint.size(); i++) {
                         rectLine.add(directionPoint.get(i));
                     }
@@ -1014,24 +1019,24 @@ public class Home_fragment extends Fragment implements LocationListener {
 
 
 
-        LatLng currentLocation = getCurrentLocation();
-
-        // Display the current location in the UI
-        if (location != null) {
-
-            if (mPositionMarker == null) {
-                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                        .position(   currentLocation
-                        )
-                        .title("Eu")
-                        .icon(BitmapDescriptorFactory.fromResource((R.drawable.myloc))));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-            } else
-                mPositionMarker.setPosition( currentLocation);
-        }
-
-
-        rotateMarker(mPositionMarker,location.getBearing());
+//        LatLng currentLocation = getCurrentLocation();
+//
+//        // Display the current location in the UI
+//        if (location != null) {
+//
+//            if (mPositionMarker == null) {
+//                mPositionMarker = mMap.addMarker(new MarkerOptions()
+//                        .position(   currentLocation
+//                        )
+//                        .title("Eu")
+//                        .icon(BitmapDescriptorFactory.fromResource((R.drawable.myloc))));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+//            } else
+//                mPositionMarker.setPosition( currentLocation);
+//        }
+//
+//
+//        rotateMarker(mPositionMarker,location.getBearing());
 
 
 //        LatLng currentLocation = getCurrentLocation();

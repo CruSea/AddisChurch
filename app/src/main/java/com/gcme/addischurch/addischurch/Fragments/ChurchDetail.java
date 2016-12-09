@@ -114,8 +114,6 @@ public class ChurchDetail extends Fragment {
 
                 }
 
-                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
-
                 favwhite.setVisibility(View.VISIBLE);
                 favred.setVisibility(View.GONE);
             }
@@ -124,7 +122,14 @@ public class ChurchDetail extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+
+                if(getArguments().getString("Keyid")!=null) {
+                    SelectedSearchitem = getArguments().getString("Keyid");
+                    DbHelper.InsertHome(SelectedSearchitem);
+                }
+
+
+
 
                 churchwhite.setVisibility(View.GONE);
                 churchred.setVisibility(View.VISIBLE);
@@ -133,6 +138,13 @@ public class ChurchDetail extends Fragment {
         churchred.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(getArguments().getString("Keyid" )!=null) {
+                    SelectedSearchitem = getArguments().getString("Keyid");
+                    DbHelper.changehome();
+                    DbHelper.InsertHome(SelectedSearchitem);
+                }
+
 
                 //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
 
@@ -169,8 +181,8 @@ public class ChurchDetail extends Fragment {
         }
 
 
-        if(getArguments().getString("markname")!=null) {
-            Selectedmarkname = getArguments().getString("markname");
+        if(getArguments().getString("MarkerName")!=null) {
+            Selectedmarkname = getArguments().getString("MarkerName");
 
 
             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
