@@ -218,30 +218,32 @@
 
             </RelativeLayout>
             <include layout="@layout/divider" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-            <RelativeLayout
+                android:text="Schedules"
+                android:textColor="#000"
+                android:id="@+id/textView11"
+                />
+
+
+            <ListView
+                android:id="@+id/ScheduleList"
+                android:dividerHeight="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="150dp"
+                android:divider="#00000000"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/textView11" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-                    android:text="Schedules"
-                    android:textColor="#000"
-                    android:id="@+id/textView11"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_below="@+id/textView11"
-                    android:text="Sunday 5:30-7:30"
-                    android:textColor="#000"
-                    android:id="@+id/sermon"
-                    />
+               <!---->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
             <include layout="@layout/divider" />
 
             <android.support.v7.widget.RecyclerView

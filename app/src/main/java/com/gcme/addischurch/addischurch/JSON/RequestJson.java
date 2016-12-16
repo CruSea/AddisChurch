@@ -45,8 +45,11 @@ public class RequestJson extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
+        /**Sync Churchs**/
         getchurches();
-        Toast.makeText(getApplicationContext(), "request sent!", Toast.LENGTH_LONG).show();
+        /**Sync Church Schedules**/
+        getchurchschedules();
+
 
         jobFinished(params, false);
         return false;
@@ -102,7 +105,78 @@ public class RequestJson extends JobService {
         requestQueue.add(req);
 
     }
-    public void addData(String Id, String name, String churchlocation, String contacts, String web, String sermons, String category, String longitude, String latitude, String ImageLoction, String ImageUrl) {
+
+
+
+    private void getchurchschedules() {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "http://localchurch-001-site1.btempurl.com/api/schedules";
+        JsonArrayRequest req = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+
+                        try {
+
+                            for (int i = 0; i < response.length(); i++) {
+
+
+                                JSONObject Jo = (JSONObject) response.get(i);
+                                String ID = Jo.getString("id");
+                                String churchId = Jo.getString("churchId");
+                                String scheduledate = Jo.getString("date");
+                                String scheduletime = Jo.getString("time");
+                                String ScheduleCategory = Jo.getString("catagory");
+                                addScheduleData(ID, churchId,scheduledate, scheduletime, ScheduleCategory);
+                            }} catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),
+                                    "Error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        requestQueue.add(req);
+
+    }
+
+    private void addScheduleData(String Id, String churchId, String scheduledate, String scheduletime, String scheduleCategory) {
+
+
+
+
+        DbHelper = new DatabaseAdaptor(this);
+
+        long id = DbHelper.InsertChurchSchedule(Id, churchId, scheduledate, scheduletime, scheduleCategory);
+        if (id < 0) {
+            Toast.makeText(getApplicationContext(), "Scgedule JSON insert failed!", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Scgedule JSON data successfully inserted!", Toast.LENGTH_LONG).show();
+
+        }
+
+
+    }
+
+
+
+
+    private void addData(String Id, String name, String churchlocation, String contacts, String web, String sermons, String category, String longitude, String latitude, String ImageLoction, String ImageUrl) {
         {
 
 

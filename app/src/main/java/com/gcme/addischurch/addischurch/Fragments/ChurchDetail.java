@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +26,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.gcme.addischurch.addischurch.Adapters.ScheduleAdapter;
 import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
 import com.gcme.addischurch.addischurch.FileManager.FileManager;
+import com.gcme.addischurch.addischurch.Model.Schedules;
 import com.gcme.addischurch.addischurch.R;
 import com.gcme.addischurch.addischurch.Testimony.EventHandler;
 import com.gcme.addischurch.addischurch.Testimony.NetworkEventController;
@@ -65,6 +69,7 @@ public class ChurchDetail extends Fragment {
     RequestQueue queue;
     String url = "https://raw.githubusercontent.com/mobilesiri/Android-Custom-Listview-Using-Volley/master/richman.json";
     RecyclerView recyclerView;
+    ListView  scheduleList;
     List<EventHandler> feedsList = new ArrayList<EventHandler>();
     RecyclerEventAdapter adapter;
     public ChurchDetail() {
@@ -79,9 +84,9 @@ public class ChurchDetail extends Fragment {
 
         contactsview = (TextView) view.findViewById(R.id.phoneno);
         webview = (TextView) view.findViewById(R.id.web);
-        sermonview = (TextView) view.findViewById(R.id.sermon);
-        BannerImage= (ImageView) view.findViewById(R.id.headerimage);
 
+        BannerImage= (ImageView) view.findViewById(R.id.headerimage);
+        scheduleList= (ListView) view.findViewById(R.id.ScheduleList);
         churchwhite = (ImageButton) view.findViewById(R.id.favhomechurch1);
         churchred = (ImageButton) view.findViewById(R.id.favhomechurch2);
         favred = (ImageButton) view.findViewById(R.id.favred);
@@ -164,16 +169,8 @@ public class ChurchDetail extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
             FillContents(Selecteditemid);
-
+            getschedule(Selecteditemid);
 
 
 
@@ -298,6 +295,66 @@ public class ChurchDetail extends Fragment {
         return view;
     }
 
+    private void getschedule(String selecteditemid) {
+
+//        Cursor cursor=DbHelper.getScheduleDataRowById(selecteditemid);
+        Cursor cursor=DbHelper.getScheduleDataRowById(selecteditemid);
+
+        if(cursor.getCount()>0 && cursor.moveToFirst()) {
+            List<Schedules> schedules = new ArrayList<Schedules>();
+
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+               //cursor.move(i);
+                cursor.moveToPosition(i);
+
+
+
+                // do {
+                    Schedules schedules1 = new Schedules();
+
+                    schedules1.setCatagory(cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleCategory)));
+                    schedules1.setDate(cursor.getString(cursor.getColumnIndex(DbHelper.SheduleDate)));
+                    schedules1.setTime(cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleTime)));
+
+                    schedules.add(schedules1);
+                }
+               //while (cursor.moveToNext());
+
+//                do{
+//
+//                    String str=cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleCategory));
+//
+//
+//                    //  Toast.makeText(getActivity(), str, Toast.LENGTH_LONG).show();
+//                    String str2=cursor.getString(cursor.getColumnIndex(DbHelper.SheduleDate));
+//
+//                    String str3=cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleTime));
+//                    schedules1.setCatagory(str);
+//                    schedules1.setDate(str2);
+//                    schedules1.setTime(str3);
+//
+//                }while();
+
+
+//                schedules1.setCatagory(cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleCategory)));
+
+
+
+            //}
+
+            ScheduleAdapter scheduleAdapter = new ScheduleAdapter(schedules, getActivity());
+            scheduleList.setAdapter(scheduleAdapter);
+        }else {
+            Toast.makeText(getActivity(), "There is no schedule!", Toast.LENGTH_LONG).show();
+
+        }
+
+
+        }
+
+
+
     private void fillbyname(String selectedmarkname) {
 
 
@@ -309,12 +366,11 @@ public class ChurchDetail extends Fragment {
 
             String contacts = cursor.getString(cursor.getColumnIndex(DbHelper.CONTACTS));
             String web = cursor.getString(cursor.getColumnIndex(DbHelper.WEB));
-            String sermon = cursor.getString(cursor.getColumnIndex(DbHelper.SERMONS));
             contactsview.setText(contacts);
 
             webview.setText(web);
 
-            sermonview.setText(sermon);
+
 
 
             final String Longitude = cursor.getString(cursor.getColumnIndex(DbHelper.LONGITUDE));
@@ -417,12 +473,11 @@ public class ChurchDetail extends Fragment {
             }
             String contacts = cursor.getString(cursor.getColumnIndex(DbHelper.CONTACTS));
             String web = cursor.getString(cursor.getColumnIndex(DbHelper.WEB));
-            String sermon = cursor.getString(cursor.getColumnIndex(DbHelper.SERMONS));
             contactsview.setText(contacts);
 
             webview.setText(web);
 
-            sermonview.setText(sermon);
+
 
 
             final String Longitude = cursor.getString(cursor.getColumnIndex(DbHelper.LONGITUDE));

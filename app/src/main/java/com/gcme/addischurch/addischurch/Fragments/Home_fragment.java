@@ -613,7 +613,7 @@ public class Home_fragment extends Fragment implements LocationListener {
         mSearchView = (FloatingSearchView) view.findViewById(R.id.floating_search_view);
 
 
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar2);
         mProgressBar.setIndeterminate(true);
 
 
@@ -983,7 +983,7 @@ public class Home_fragment extends Fragment implements LocationListener {
 
     private void pinpoint(String cname, LatLng pos) {
 
-        mMap.addMarker(new MarkerOptions().position(pos).title(cname).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_map_pin)));
+        mMap.addMarker(new MarkerOptions().position(pos).title(cname).icon(BitmapDescriptorFactory.fromResource(R.mipmap.church_icon)));
 
     }
 

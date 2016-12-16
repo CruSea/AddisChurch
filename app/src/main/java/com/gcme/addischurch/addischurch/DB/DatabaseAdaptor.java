@@ -15,7 +15,7 @@ public class DatabaseAdaptor {
     DatabaseHelper helper;
 
     String TABLE1_NAME = "church_table";
-    String TABLE2_NAME = "events_table";
+    String TABLE2_NAME = "schedules_table";
     String TABLE3_NAME = "denominations_table";
     String TABLE4_NAME = "fav_table";
     String TABLE5_NAME = "my_church";
@@ -29,9 +29,15 @@ public class DatabaseAdaptor {
     public String LONGITUDE="_longitude";
     public String LATITUDE="_latitude";
     public String SERMONS="_sermons";
-    private static final String ImageLoction="_imagesLocation";
-    private static final String ImageUrl="_ImageUrl";
+    public String ImageLoction="_imagesLocation";
+    public String ImageUrl="_ImageUrl";
 
+
+
+    public String ChurchId = "church_id";
+    public String SheduleDate = "schedule_date";
+    public String ScheduleTime= "schedule_time";
+    public String ScheduleCategory= "schedule_category";
 
 //    public String DATE="_date";
 //    public String TIME="_time";
@@ -67,11 +73,11 @@ public class DatabaseAdaptor {
 
     /**Church Info**/
 
-    public long InsertChurch(String _id,String name ,  String churchlocation , String contacts,String web, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
+    public long InsertChurch(String Id,String name ,  String churchlocation , String contacts,String web, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.ID, _id);
+        contentValues.put(DatabaseHelper.ID, Id);
         contentValues.put(DatabaseHelper.NAME, name);
         contentValues.put(DatabaseHelper.CHURCH_LOCATION, churchlocation);
         contentValues.put(DatabaseHelper.CONTACTS, contacts);
@@ -89,7 +95,59 @@ public class DatabaseAdaptor {
         return id;
     }
 
+    public long InsertChurchSchedule(String Id, String churchId, String scheduledate, String scheduletime, String scheduleCategory){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.ID,Id);
+        contentValues.put(DatabaseHelper.ChurchId, churchId);
+        contentValues.put(DatabaseHelper.SheduleDate,scheduledate);
+        contentValues.put(DatabaseHelper.ScheduleTime, scheduletime);
+        contentValues.put(DatabaseHelper.ScheduleCategory, scheduleCategory);
 
+
+
+
+        long id = db.insert(DatabaseHelper.TABLE2_NAME, null, contentValues);
+        return id;
+    }
+
+
+
+
+    public Cursor getScheduleDataRowById(String churchid) {
+//        SQLiteDatabase db = helper.getReadableDatabase();
+//        String selectQuery =  "SELECT  rowid as " +
+//                ScheduleCategory + "," +
+//                SheduleDate + "," +
+//                ScheduleTime +
+//                " FROM " + TABLE2_NAME +
+//                " WHERE " +  ChurchId + "  LIKE  '%" +churchid + "%' "
+//                ;
+//
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        // looping through all rows and adding to list
+//
+//
+//        if (cursor != null) {
+//            cursor.moveToFirst();
+//        }
+////        if (cursor == null) {
+////            return null;
+////        } else if (!cursor.moveToFirst()) {
+////            cursor.close();
+////            return null;
+////        }
+//        return cursor;
+
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE2_NAME + " WHERE " + ChurchId + " = '" + churchid + "'", null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+
+    }
 
 
 
@@ -188,6 +246,8 @@ public class DatabaseAdaptor {
 
 
 
+
+
 //    /**Event Info**/
 //    public long InsertEvent(String _id,String event_name ,  String eventchurchname , String eventaddress, String date, String time) {
 //
@@ -210,6 +270,14 @@ public class DatabaseAdaptor {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from "+TABLE1_NAME,null);
+        return c;
+
+    }
+
+    public Cursor getAllSchedules(){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from "+TABLE2_NAME,null);
         return c;
 
     }
@@ -448,10 +516,10 @@ public class DatabaseAdaptor {
     public static class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "Addis_churches";
 
-        private static final Integer DATABASE_VERSION = 9;
+        private static final Integer DATABASE_VERSION = 11;
 
         private static final String TABLE1_NAME = "church_table";
-        private static final String TABLE2_NAME = "events_table";
+        private static final String TABLE2_NAME = "schedules_table";
         private static final String TABLE3_NAME = "denominations_table";
         private static final String TABLE4_NAME = "fav_table";
         private static final String TABLE5_NAME = "my_church";
@@ -475,6 +543,12 @@ public class DatabaseAdaptor {
         private static final String ImageUrl="_ImageUrl";
 
 
+        private static final String ChurchId = "church_id";
+        private static final String SheduleDate = "schedule_date";
+        private static final String ScheduleTime= "schedule_time";
+        private static final String ScheduleCategory= "schedule_category";
+
+
         private static final String EVENTNAME="_event_name";
         private static final String EVENTADDRESS="_event_address";
         private static final String DATE="_date";
@@ -488,7 +562,7 @@ public class DatabaseAdaptor {
         private static final String FavSelected  = "Fav_Selected";
 
         private static final String CREATE_TABLE = "CREATE TABLE " + TABLE1_NAME + "(" + ID + " integer PRIMARY KEY ," + NAME + " VARCHAR(255), " + CHURCH_LOCATION + " VARCHAR(255)," + CONTACTS +" VARCHAR(255)," + WEB + " VARCHAR(255), "+ SERMONS + " VARCHAR(255), " + CATEGORY + " VARCHAR(255), " + LONGITUDE + " VARCHAR(255)," + LATITUDE + " VARCHAR(255)," + ImageLoction + " VARCHAR(255),"+ ImageUrl + " VARCHAR(255));";
-        //private static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + EVENTNAME + " VARCHAR(255), " + EVENTCHURCHNAME + " VARCHAR(255)," + EVENTADDRESS +" VARCHAR(255), "+ DATE + " VARCHAR(255), " + TIME + " VARCHAR(255));";
+        private static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + "(" + ID + " integer PRIMARY KEY ," + ChurchId + " VARCHAR(255), " + SheduleDate + " VARCHAR(255)," + ScheduleTime +" VARCHAR(255), "+ ScheduleCategory + " VARCHAR(255));";
         private static final String CREATE_TABLE3 = "CREATE TABLE " + TABLE3_NAME + "(" + IDCAT + " integer PRIMARY KEY AUTOINCREMENT," + CATEGORY + " VARCHAR(255)," + CAT_IMG_URL + " VARCHAR(255)," + CAT_IMG_LOC + " VARCHAR(255));";
 
         private static final String CREATE_TABLE4 = "CREATE TABLE " + TABLE4_NAME + "(" + ID + " integer PRIMARY KEY AUTOINCREMENT," + FavSelected + " VARCHAR(255));";
@@ -497,7 +571,7 @@ public class DatabaseAdaptor {
 
 
         private static final String DROPE_TABLE = "DROP TABLE IF EXISTS " + TABLE1_NAME;
-        // private static final String DROPE_TABLE2 = "DROP TABLE IF EXISTS " + TABLE2_NAME;
+         private static final String DROPE_TABLE2 = "DROP TABLE IF EXISTS " + TABLE2_NAME;
         private static final String DROPE_TABLE3 = "DROP TABLE IF EXISTS " + TABLE3_NAME;
         private static final String DROPE_TABLE4 = "DROP TABLE IF EXISTS " + TABLE4_NAME;
         private static final String DROPE_TABLE5 = "DROP TABLE IF EXISTS " + TABLE5_NAME;
@@ -514,7 +588,7 @@ public class DatabaseAdaptor {
         public void onCreate(SQLiteDatabase db) {
             try {
                 db.execSQL(CREATE_TABLE);
-                // db.execSQL(CREATE_TABLE2);
+                 db.execSQL(CREATE_TABLE2);
                 db.execSQL(CREATE_TABLE3);
                 db.execSQL(CREATE_TABLE4);
                 db.execSQL(CREATE_TABLE5);
@@ -533,7 +607,7 @@ public class DatabaseAdaptor {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             try {
                 db.execSQL(DROPE_TABLE);
-                // db.execSQL(DROPE_TABLE2);
+                db.execSQL(DROPE_TABLE2);
                 db.execSQL(DROPE_TABLE3);
                 db.execSQL(DROPE_TABLE4);
                 db.execSQL(DROPE_TABLE5);
