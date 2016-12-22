@@ -1,13 +1,22 @@
 package com.gcme.addischurch.addischurch.Testimony;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.gcme.addischurch.addischurch.Event.EventDetail;
+import com.gcme.addischurch.addischurch.Fragments.AllChurches;
+import com.gcme.addischurch.addischurch.Fragments.ChurchDenomination;
+import com.gcme.addischurch.addischurch.Fragments.ChurchDetail;
+import com.gcme.addischurch.addischurch.Fragments.ChurchEventDetail;
 import com.gcme.addischurch.addischurch.R;
 
 import java.util.List;
@@ -21,6 +30,7 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
     private List<EventHandler> feedsList;
     private Context context;
     private LayoutInflater inflater;
+    ChurchDetail churchdetail;
 
     public RecyclerEventAdapter(Context context, List<EventHandler> feedsList) {
 
@@ -38,12 +48,36 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        EventHandler feeds = feedsList.get(position);
+        final EventHandler feeds = feedsList.get(position);
         //Pass the values of feeds object to Views
         holder.title.setText(feeds.getFeedName());
         holder.source.setText(feeds.getSource());
         holder.imageview.setImageUrl(feeds.getImgURL(), NetworkEventController.getInstance(context).getImageLoader());
+        holder.imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context,"clicked" + feeds.getFeedName(),Toast.LENGTH_SHORT).show();
+//                Bundle args = new Bundle();
+//                args.putString("denominations",feeds.getFeedName());
 
+
+
+                //start the second activity
+                android.support.v4.app.Fragment fragment = new ChurchEventDetail();
+                android.support.v4.app.FragmentManager manager= ((AppCompatActivity) context).getSupportFragmentManager();
+                Bundle args = new Bundle();
+                args.putString("fedname",feeds.getFeedName());
+                args.putString("sorce", feeds.getSource());
+                args.putString("imge", feeds.getImgURL());
+                fragment.setArguments(args);
+
+                android.support.v4.app.FragmentTransaction transaction =   manager.beginTransaction();
+                transaction.replace(R.id.fragment_container,fragment);
+                transaction.addToBackStack("tag_back_Events");
+                transaction.commit();
+
+            }
+        });
 //        holder.mView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -62,19 +96,17 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        View mView;
         private TextView title, source;
         private NetworkImageView imageview;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            mView = itemView;
 
-            title = (TextView) mView.findViewById(R.id.title_view);
-            source = (TextView) mView.findViewById(R.id.source);
+            title = (TextView) itemView.findViewById(R.id.title_viewchurchdetail);
+            source = (TextView) itemView.findViewById(R.id.sourcechurchdetail);
 
             // Volley's NetworkImageView which will load Image from URL
-            imageview = (NetworkImageView) mView.findViewById(R.id.thumbnail);
+            imageview = (NetworkImageView) itemView.findViewById(R.id.thumbnailchurchdetail);
 
 
         }

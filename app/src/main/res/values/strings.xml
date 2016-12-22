@@ -24,5 +24,6 @@
         <item>kazanchis</item>
         <item>cmc</item>
     </string-array>
+    <string name="title_activity_event_detail">EventDetail</string>
 
 </resources>

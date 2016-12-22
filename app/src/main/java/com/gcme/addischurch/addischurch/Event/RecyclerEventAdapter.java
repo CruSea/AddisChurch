@@ -1,13 +1,19 @@
 package com.gcme.addischurch.addischurch.Event;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.gcme.addischurch.addischurch.Fragments.AllChurches;
+import com.gcme.addischurch.addischurch.Fragments.ChurchDenomination;
 import com.gcme.addischurch.addischurch.R;
 
 import java.util.List;
@@ -21,6 +27,9 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
     private List<EventsHandler> feedsList;
     private Context context;
     private LayoutInflater inflater;
+    AllChurches allchurches;
+    private static FragmentManager fragmentManager;
+
 
     public RecyclerEventAdapter(Context context, List<EventsHandler> feedsList) {
 
@@ -38,11 +47,27 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        EventsHandler feeds = feedsList.get(position);
+        final EventsHandler feeds = feedsList.get(position);
         //Pass the values of feeds object to Views
         holder.title.setText(feeds.getFeedName());
         holder.source.setText(feeds.getSource());
         holder.imageview.setImageUrl(feeds.getImgURL(), NetworkEventController.getInstance(context).getImageLoader());
+        holder.imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context,"clicked" + feeds.getFeedName(),Toast.LENGTH_SHORT).show();
+//                Bundle args = new Bundle();
+//                args.putString("denominations",feeds.getFeedName());
+                Intent intent=new Intent(context, EventDetail.class);
+                //add data to the Intent object
+                intent.putExtra("feedname", feeds.getFeedName());
+                intent.putExtra("source", feeds.getSource());
+                intent.putExtra("image", feeds.getImgURL());
+                //start the second activity
+                context.startActivity(intent);
+
+            }
+        });
     }
 
     @Override
@@ -51,6 +76,8 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
+
 
         private TextView title, source;
         private NetworkImageView imageview;
