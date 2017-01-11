@@ -5,12 +5,14 @@
     android:id="@+id/card_vie"
     android:layout_width="200dp"
     android:layout_height="220dp"
+    android:paddingBottom="10dp"
     card_view:cardElevation="3dp"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:orientation="vertical">
 
         <com.android.volley.toolbox.NetworkImageView
@@ -38,7 +40,8 @@
             android:text="11/27/2016"
             android:textColor="@color/primaryText"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+           />
 
 
     </LinearLayout>

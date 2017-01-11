@@ -10,12 +10,12 @@
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toAlpha="1.0"
         android:repeatCount="infinite"
-        android:repeatMode="restart" /> <!-- i've added repeatCount and repeatMode attr -->
+        android:repeatMode="reverse" /> <!-- i've added repeatCount and repeatMode attr -->
 
-    <translate
-        android:duration="2000"
-        android:fromXDelta="70%p"
-        android:toXDelta="0%p"
-        android:repeatCount="infinite"
-        android:repeatMode="restart"/> <!-- i've added repeatCount and repeatMode attr -->
+    <!--<translate-->
+        <!--android:duration="2000"-->
+        <!--android:fromXDelta="70%p"-->
+        <!--android:toXDelta="0%p"-->
+        <!--android:repeatCount="infinite"-->
+        <!--android:repeatMode="restart"/> &lt;!&ndash; i've added repeatCount and repeatMode attr &ndash;&gt;-->
 </set>

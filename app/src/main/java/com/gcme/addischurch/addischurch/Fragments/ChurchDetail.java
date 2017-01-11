@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.gcme.addischurch.addischurch.Adapters.ScheduleAdapter;
+import com.gcme.addischurch.addischurch.Adapters.UIUtils;
 import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
 import com.gcme.addischurch.addischurch.FileManager.FileManager;
 import com.gcme.addischurch.addischurch.Model.Schedules;
@@ -295,9 +296,10 @@ public class ChurchDetail extends Fragment {
         return view;
     }
 
+
+   /** populates the schedule list from the database**/
     private void getschedule(String selecteditemid) {
 
-//        Cursor cursor=DbHelper.getScheduleDataRowById(selecteditemid);
         Cursor cursor=DbHelper.getScheduleDataRowById(selecteditemid);
 
         if(cursor.getCount()>0 && cursor.moveToFirst()) {
@@ -305,7 +307,7 @@ public class ChurchDetail extends Fragment {
 
 
             for (int i = 0; i < cursor.getCount(); i++) {
-               //cursor.move(i);
+
                 cursor.moveToPosition(i);
 
 
@@ -319,32 +321,11 @@ public class ChurchDetail extends Fragment {
 
                     schedules.add(schedules1);
                 }
-               //while (cursor.moveToNext());
 
-//                do{
-//
-//                    String str=cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleCategory));
-//
-//
-//                    //  Toast.makeText(getActivity(), str, Toast.LENGTH_LONG).show();
-//                    String str2=cursor.getString(cursor.getColumnIndex(DbHelper.SheduleDate));
-//
-//                    String str3=cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleTime));
-//                    schedules1.setCatagory(str);
-//                    schedules1.setDate(str2);
-//                    schedules1.setTime(str3);
-//
-//                }while();
-
-
-//                schedules1.setCatagory(cursor.getString(cursor.getColumnIndex(DbHelper.ScheduleCategory)));
-
-
-
-            //}
 
             ScheduleAdapter scheduleAdapter = new ScheduleAdapter(schedules, getActivity());
             scheduleList.setAdapter(scheduleAdapter);
+            UIUtils.setListViewHeightBasedOnItems(scheduleList);
         }else {
             Toast.makeText(getActivity(), "There is no schedule!", Toast.LENGTH_LONG).show();
 

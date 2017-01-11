@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        >
+
+
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:src="@android:drawable/ic_menu_directions"
+            android:layout_alignTop="@+id/mylocation"
+            android:layout_alignParentRight="true"
+
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="21dp"
+            android:layout_marginEnd="21dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/walk"
+            android:visibility="invisible"
+            android:layout_gravity="center|left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_walk"
+            android:layout_above="@+id/route"
+            android:layout_alignLeft="@+id/route"
+            android:layout_alignStart="@+id/route"
+            android:layout_marginBottom="30dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/car"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center|right"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_car"
+            android:layout_above="@+id/walk"
+            android:layout_alignLeft="@+id/walk"
+            android:layout_alignStart="@+id/walk"
+            android:layout_marginBottom="51dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/sync"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_sync"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/car"
+            android:layout_alignStart="@+id/car"
+            android:layout_marginTop="15dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/mylocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:visibility="visible"
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+
+
+</RelativeLayout>
+
+

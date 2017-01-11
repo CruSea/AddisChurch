@@ -22,15 +22,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -63,7 +70,8 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import static android.content.Context.LOCATION_SERVICE;
 
-public class Home_fragment extends Fragment implements LocationListener {
+
+public class Home_fragment extends Fragment implements LocationListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -85,6 +93,13 @@ public class Home_fragment extends Fragment implements LocationListener {
     LatLng CurrentLocation;
     Marker mPositionMarker;
     Boolean isMarkerRotating=false;
+    FloatingActionButton downbutton;
+
+    AnimationSet animMove;
+    int position = 0;
+    TextView intelStoryTextView;
+    String[] my_string = {"drag up to go to map"};
+
 
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION=11;
     private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION=12;
@@ -138,8 +153,6 @@ public class Home_fragment extends Fragment implements LocationListener {
 
         setupSearchBar();
     }
-
-
 
 
 
@@ -611,7 +624,7 @@ public class Home_fragment extends Fragment implements LocationListener {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.content_main, container, false);
         mSearchView = (FloatingSearchView) view.findViewById(R.id.floating_search_view);
-
+//        intelStoryTextView = (TextView) view.findViewById(R.id.dragup);
 
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar2);
         mProgressBar.setIndeterminate(true);
@@ -752,14 +765,6 @@ public class Home_fragment extends Fragment implements LocationListener {
         });
 
 
-
-
-
-
-
-
-
-
         return view;
     }
 
@@ -777,7 +782,6 @@ public class Home_fragment extends Fragment implements LocationListener {
         } else {
             gps.showSettingsAlert();
             checkingLatLng = true;
-//            dialog.hide();
         }
 
         return CurrentLocation;
@@ -848,8 +852,6 @@ public class Home_fragment extends Fragment implements LocationListener {
             @Override
             public void onSearchAction(String query) {
                 mLastQuery = query;
-//                Toast.makeText(getActivity(), "this is what you searched" +query, Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -1204,6 +1206,8 @@ public class Home_fragment extends Fragment implements LocationListener {
             }
         });
     }
+
+
 //
 //    public void showWaitPopup() {
 //        new MaterialDialog.Builder(getActivity())
