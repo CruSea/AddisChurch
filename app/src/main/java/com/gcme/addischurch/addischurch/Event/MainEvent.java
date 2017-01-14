@@ -9,6 +9,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,8 +26,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainEvent extends AppCompatActivity {
+public class MainEvent extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+
+    Spinner spinner;
     RequestQueue queue;
     String url = "https://raw.githubusercontent.com/mobilesiri/Android-Custom-Listview-Using-Volley/master/richman.json";
     RecyclerView recyclerView;
@@ -34,6 +40,11 @@ public class MainEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_event);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter adapter2 = ArrayAdapter.createFromResource(this,R.array.type2,android.R.layout.simple_spinner_item);
+        spinner.setAdapter(adapter2);
+        spinner.setOnItemSelectedListener(this);
         //Initialize RecyclerView
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         adapter = new RecyclerEventAdapter(this, feedsList);
@@ -79,6 +90,29 @@ public class MainEvent extends AppCompatActivity {
         queue.add(newsReq);
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                Toast.makeText(parent.getContext(), "Spinner item 1!", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                Toast.makeText(parent.getContext(), "Spinner item 2!", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(parent.getContext(), "Spinner item 3!", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;

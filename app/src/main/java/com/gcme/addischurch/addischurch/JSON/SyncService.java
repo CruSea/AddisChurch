@@ -47,16 +47,17 @@ public class SyncService extends JobService {
         if(cursor.getCount()!=0) {
 
             downloadchurchImage();
+            cursor.close();
         }
-
+        cursor.close();
 
         Cursor cu = DbHelper.getAlldenominations();
         if(cu.getCount()!=0) {
             downloaddenominationimages();
-
+            cu.close();
         }
 
-
+        cu.close();
             jobFinished(params, false);
             return false;
     }

@@ -560,7 +560,7 @@ public class Home_fragment extends Fragment implements LocationListener{
                         getFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_container, secondFrag)
-                                .addToBackStack(null)
+                                .addToBackStack("tag_back_ChurchDetail")
                                 .commit();
 
 
@@ -684,7 +684,7 @@ public class Home_fragment extends Fragment implements LocationListener{
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, secondFrag)
-                        .addToBackStack(null)
+                        .addToBackStack("tag_back_ChurchDetail")
                         .commit();
 
 
@@ -759,7 +759,7 @@ public class Home_fragment extends Fragment implements LocationListener{
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, secondFrag)
-                        .addToBackStack(null)
+                        .addToBackStack("tag_back_ChurchDetail")
                         .commit();
             }
         });
@@ -796,6 +796,7 @@ public class Home_fragment extends Fragment implements LocationListener{
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
                 DbHelper = new DatabaseAdaptor(getActivity());
                 Cursor cursor = DbHelper.getCategoryListByKeyword(newQuery);
+
                 ListView activeList = (ListView) getView().findViewById(R.id.activelist);
 
 

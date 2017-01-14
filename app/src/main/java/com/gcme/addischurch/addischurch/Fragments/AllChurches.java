@@ -109,7 +109,7 @@ public class AllChurches extends Fragment {
 
 
 
-                    Cursor cu=DbHelper.getSelectedRows(cname);
+                    Cursor cu= DbHelper.getSelectedRows(cname);
                     final int numberofchurches = cu.getCount();
                     if(numberofchurches>0) {
 

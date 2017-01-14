@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
+
+import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by kzone on 8/25/2016.
@@ -57,7 +60,7 @@ public class DatabaseAdaptor {
 
     public String FavSelected  = "Fav_Selected";
 
-    private static final String Home_Church  = "home_church";
+    public String Home_Church  = "home_church";
 
     public DatabaseAdaptor(Context context) {
         helper = new DatabaseHelper(context);
@@ -92,6 +95,7 @@ public class DatabaseAdaptor {
 
 
         long id = db.insert(DatabaseHelper.TABLE1_NAME, null, contentValues);
+        db.close();
         return id;
     }
 
@@ -104,10 +108,8 @@ public class DatabaseAdaptor {
         contentValues.put(DatabaseHelper.ScheduleTime, scheduletime);
         contentValues.put(DatabaseHelper.ScheduleCategory, scheduleCategory);
 
-
-
-
         long id = db.insert(DatabaseHelper.TABLE2_NAME, null, contentValues);
+        db.close();
         return id;
     }
 
@@ -145,6 +147,7 @@ public class DatabaseAdaptor {
         if (c != null) {
             c.moveToFirst();
         }
+        db.close();
         return c;
 
     }
@@ -270,7 +273,11 @@ public class DatabaseAdaptor {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from "+TABLE1_NAME,null);
+
+
         return c;
+
+
 
     }
 
@@ -289,6 +296,7 @@ public class DatabaseAdaptor {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor  c = db.rawQuery("select * from "+TABLE3_NAME,null);
+
         return c;
 
     }
@@ -383,6 +391,8 @@ public class DatabaseAdaptor {
 
     }
 
+
+
     /**Update from database**/
     public long updateData(String Id,String name ,  String churchlocation , String contacts, String sermons, String category, String longitude,String latitude, String ImageLoction , String ImageUrl) {
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -430,9 +440,11 @@ public class DatabaseAdaptor {
         // looping through all rows and adding to list
 
         if (cursor == null) {
+
             return null;
         } else if (!cursor.moveToFirst()) {
             cursor.close();
+
             return null;
         }
         return cursor;
@@ -467,31 +479,56 @@ public class DatabaseAdaptor {
     }
 
     public Cursor getChurchName(String favid) {
+
+
+
+
         SQLiteDatabase db = helper.getReadableDatabase();
-        String selectQuery =  "SELECT  rowid as " +
-                "_id" + "," +
-                NAME + "," +
-                CATEGORY +
-                " FROM " + TABLE1_NAME +
-                " WHERE " +  ID + "  LIKE  '%" +favid + "%' "
-                ;
-
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
-
-        if (cursor == null) {
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
-        return cursor;
+        Cursor  c=db.rawQuery("SELECT * FROM " + TABLE1_NAME +" WHERE " + NAME + " = '" + favid +"'", null);
+//        if (c!=null){
+//            c.moveToFirst();
+//        }
+        return c;
+//        SQLiteDatabase db = helper.getReadableDatabase();
+//        String selectQuery =  "SELECT  rowid as " +
+//                "_id" + "," +
+//                NAME + "," +
+//                CATEGORY +
+//                " FROM " + TABLE1_NAME +
+//                " WHERE " +  ID + "  LIKE  '%" +favid + "%' "
+//                ;
+//
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        // looping through all rows and adding to list
+//
+//        if (cursor == null) {
+//            return null;
+//        } else if (!cursor.moveToFirst()) {
+//            cursor.close();
+//            return null;
+//        }
+//        return cursor;
 
     }
 
 /**END OF SEARCH**/
 
-
+public void deletefav(String favid)
+{
+    SQLiteDatabase db =helper.getWritableDatabase();
+    try
+    {
+        db.delete(TABLE4_NAME, FavSelected +" = ?", new String[] { favid });
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+    }
+    finally
+    {
+        db.close();
+    }
+}
 
 
 
@@ -510,8 +547,65 @@ public class DatabaseAdaptor {
 
     }*/
 
+    public boolean hasObjectChurch(String id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String selectString = "SELECT * FROM " + TABLE1_NAME + " WHERE " + ID + " =?";
 
+        // Add the String you are searching by here.
+        // Put it in an array to avoid an unrecognized token error
+        Cursor cursor = db.rawQuery(selectString, new String[] {id});
 
+        boolean hasObject = false;
+        if(cursor.moveToFirst()){
+            hasObject = true;
+
+            //region if you had multiple records to check for, use this region.
+
+            int count = 0;
+            while(cursor.moveToNext()){
+                count++;
+            }
+            //here, count is records found
+            Log.d(TAG, String.format("%d records found", count));
+
+            //endregion
+
+        }
+
+        cursor.close();          // Dont forget to close your cursor
+        db.close();              //AND your Database!
+        return hasObject;
+    }
+
+    public boolean hasObjectSchedule(String id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String selectString = "SELECT * FROM " + TABLE2_NAME + " WHERE " + ID + " =?";
+
+        // Add the String you are searching by here.
+        // Put it in an array to avoid an unrecognized token error
+        Cursor cursor = db.rawQuery(selectString, new String[] {id});
+
+        boolean hasObject = false;
+        if(cursor.moveToFirst()){
+            hasObject = true;
+
+            //region if you had multiple records to check for, use this region.
+
+            int count = 0;
+            while(cursor.moveToNext()){
+                count++;
+            }
+            //here, count is records found
+            Log.d(TAG, String.format("%d records found", count));
+
+            //endregion
+
+        }
+
+        cursor.close();          // Dont forget to close your cursor
+        db.close();              //AND your Database!
+        return hasObject;
+    }
 
     public static class DatabaseHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "Addis_churches";

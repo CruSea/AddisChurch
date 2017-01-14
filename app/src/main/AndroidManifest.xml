@@ -45,6 +45,22 @@
         <activity
             android:name=".Event.MainEvent"
             android:parentActivityName=".MainActivity" />
+
+
+        <activity
+            android:name=".Event.EventDetail"
+            android:label="@string/title_activity_event_detail"
+            >
+
+        </activity>
+
+        <activity
+            android:name=".activities.DetailActivity"
+            android:label="detail"
+            >
+
+        </activity>
+
     </application>
 
 </manifest>

@@ -2,12 +2,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context="com.gcme.addischurch.addischurch.Fragments.MyFav">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ListView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fav_list" />
+        android:layout_gravity="top"
+        android:id="@+id/relativeLayout">
+
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            app:floatingSearch_dimBackground="false"
+            app:floatingSearch_dismissOnOutsideTouch="true"
+            app:floatingSearch_leftActionMode="showHamburger"
+            app:floatingSearch_searchHint="Search..."
+            app:floatingSearch_showSearchKey="true"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:floatingSearch_menu="@menu/menu_main"
+            android:layout_gravity="top"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        <ListView android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:divider="#00000000"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:dividerHeight="3dp"
+            android:id="@+id/fav_list"
+            />
+
+        <TextView
+            android:text="No Favorites Selected yet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="174dp"
+            android:visibility="gone"
+            android:id="@+id/nofav"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
 </FrameLayout>

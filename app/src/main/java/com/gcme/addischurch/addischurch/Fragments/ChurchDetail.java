@@ -131,6 +131,7 @@ public class ChurchDetail extends Fragment {
 
                 if(getArguments().getString("Keyid")!=null) {
                     SelectedSearchitem = getArguments().getString("Keyid");
+                    DbHelper.changehome();
                     DbHelper.InsertHome(SelectedSearchitem);
                 }
 
@@ -219,7 +220,7 @@ public class ChurchDetail extends Fragment {
                     getFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment_container, secondFrag)
-                            .addToBackStack(null)
+                            .addToBackStack("tag_back_Home_fragment")
                             .commit();
 
 
