@@ -23,7 +23,13 @@
             app:expandedTitleGravity="center_horizontal|bottom"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
+            <android.support.v7.widget.Toolbar
+                android:background="@color/colorPrimary"
+                android:layout_gravity="top"
+                android:title="wedechurch"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:id="@+id/detailtoolbar"/>
             <ImageView
                 android:id="@+id/headerimage"
                 android:layout_width="match_parent"
@@ -46,22 +52,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom|end"
+                android:layout_height="wrap_content"
+                android:gravity="top|right"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:orientation="horizontal">
+
                 <RelativeLayout
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_gravity="top"
+                    app:layout_collapseMode="pin"
                     >
                     <ImageButton
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-
                         android:id="@+id/favwhite"
                         android:background="?android:attr/selectableItemBackground"
-                        android:src="@drawable/ic_heart_outline_white_24dp"
+                        android:src="@drawable/ic_favorite_border"
                         />
                     <ImageButton
                         android:layout_width="50dp"
@@ -69,13 +77,16 @@
                         android:id="@+id/favred"
                         android:visibility="gone"
                         android:background="?android:attr/selectableItemBackground"
-                        android:src="@drawable/favorange"
+                        android:src="@drawable/ic_favorite_white"
                         />
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    app:layout_collapseMode="pin"
+                    android:layout_gravity="top"
                     >
                     <ImageButton
                         android:id="@+id/favhomechurch1"
@@ -83,14 +94,15 @@
                         android:layout_height="50dp"
 
                         android:background="?android:attr/selectableItemBackground"
-                        android:src="@drawable/homechurch"
+                        android:src="@drawable/ic_home"
                         />
                     <ImageButton
                         android:id="@+id/favhomechurch2"
                         android:layout_width="50dp"
                         android:visibility="gone"
                         android:layout_height="50dp"
-                        android:background="?android:attr/selectableItemBackground"                    android:src="@mipmap/homechurch"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@mipmap/ic_home_selected"
                         />
                 </RelativeLayout>
 

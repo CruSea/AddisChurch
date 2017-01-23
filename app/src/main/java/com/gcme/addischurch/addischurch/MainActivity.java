@@ -29,6 +29,7 @@ import com.gcme.addischurch.addischurch.Fragments.MyChurch;
 import com.gcme.addischurch.addischurch.Fragments.MyFav;
 import com.gcme.addischurch.addischurch.JSON.RequestJson;
 import com.gcme.addischurch.addischurch.JSON.SyncService;
+import com.gcme.addischurch.addischurch.utilities.Utils;
 
 import me.tatarka.support.job.JobInfo;
 import me.tatarka.support.job.JobScheduler;
@@ -39,24 +40,37 @@ public class MainActivity extends AppCompatActivity
     private static final int JOB_ID = 100;
     private static final int JOB_ID2 = 101;
     private JobScheduler myJobScheduler;
+    private Home_fragment home_frag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_container, new Home_fragment());
-        ft.addToBackStack("tag_back");
-        ft.commit();
+        addHome();
         whenlaunch();
         permission();
+        initUtils();
+        if(savedInstanceState==null){
 
+            addHome();
+        }else{
+
+        }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+
+
+    private void addHome() {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, new MapFragment());
+        ft.commit();
+    }
+
     private void whenlaunch() {
-//        DatabaseAdaptor DbHelper;
-//        DbHelper = new DatabaseAdaptor(this);
+        DatabaseAdaptor DbHelper;
+        DbHelper = new DatabaseAdaptor(this);
 
 
         Intent intent = new Intent(this, RequestJson.class);
@@ -67,22 +81,24 @@ public class MainActivity extends AppCompatActivity
 
 //
 //
-//        DbHelper.InsertChurch( "5", "Bole MKC", "bole","0913609212" , "bolemkc.com","Sunday 3-5" ,"MKC","38.828731","8.991639","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-//        DbHelper.InsertChurch( "2", "yeka MKC", "bole","0913609212" , "yekamkc.com", "Sunday 3-5" ,"MKC","1","38.785429","8.999935","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-//        DbHelper.InsertChurch( "3", "mexico MKC", "bole","0913609212" , "mexicomkc.com","Sunday 3-5" ,"MKC","9.026339","38.817945","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-//        DbHelper.InsertChurch( "4", "bezainternational", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","9.0094697","38.8033294","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
-//        DbHelper.InsertChurch( "6", "try", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","38.8033294","9.0094697","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "5", "Bole MKC", "bole","0913609212" , "bolemkc.com","Sunday 3-5" ,"MKC","38.828731","8.991639","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "2", "yeka MKC", "bole","0913609212" , "yekamkc.com", "Sunday 3-5" ,"MKC","1","38.785429","8.999935","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "3", "mexico MKC", "bole","0913609212" , "mexicomkc.com","Sunday 3-5" ,"MKC","9.026339","38.817945","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "4", "bezainternational", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","9.0094697","38.8033294","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "6", "try", "bole","+251 11 663 9213" , "bezainternational.org","Sunday 3-5" ,"bezainternational","38.8033294","9.0094697","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+        DbHelper.InsertChurch( "1", "samplet", "bole","0913609212" , "bolemkc.com","Sunday 3-5" ,"MKC","38.828731","8.991639","","http://www.delraypsychotherapist.com/wp-content/uploads/2011/08/Porn2-300x177.jpg");
+
 //
 //
 //        DbHelper.InsertChurchSchedule( "6", "5","sunday","10:40","youth");
 //        DbHelper.InsertChurchSchedule( "7", "5","fri","10:40","healing");
 //        DbHelper.InsertChurchSchedule( "8", "5","wed","10:40","main");
-//
-//        DbHelper.InsertChurchdenomination( "1", "Muluwengel","","");
-//        DbHelper.InsertChurchdenomination( "2", "Yougo","","");
-//        DbHelper.InsertChurchdenomination( "3", "kalehiwot","","");
-//        DbHelper.InsertChurchdenomination( "4", "MKC","http://bulbulamkc.org/kkk.jpg","");
-//        DbHelper.InsertChurchdenomination( "5", "bezainternational","","");
+
+        DbHelper.InsertChurchdenomination( "1", "Muluwengel","","");
+        DbHelper.InsertChurchdenomination( "2", "Yougo","","");
+        DbHelper.InsertChurchdenomination( "3", "kalehiwot","","");
+        DbHelper.InsertChurchdenomination( "4", "MKC","http://bulbulamkc.org/kkk.jpg","");
+        DbHelper.InsertChurchdenomination( "5", "bezainternational","","");
     }
     public void JobConstr(){
 
@@ -101,6 +117,7 @@ public class MainActivity extends AppCompatActivity
     }
 //    @Override
 //    public void onBackPressed() {
+//
 //
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.add(R.id.fragment_container, new Home_fragment());
@@ -139,7 +156,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, new Home_fragment());
+            ft.replace(R.id.fragment_container, new MapFragment());
             ft.addToBackStack("tag_back");
             ft.commit();
         } else if (id == R.id.nav_gallery) {
@@ -191,7 +208,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
+    private void initUtils() {
+        new Utils(this);
+    }
 
 
 

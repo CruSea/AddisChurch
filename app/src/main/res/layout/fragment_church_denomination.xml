@@ -62,7 +62,7 @@
         android:layout_height="match_parent"
         android:divider="#00000000"
         android:dividerHeight="3dp"
-        android:id="@+id/activelist"
+        android:id="@+id/activelist1"
         app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout"

@@ -19,11 +19,16 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.gcme.addischurch.addischurch.Adapters.DenominationAdapter;
 import com.gcme.addischurch.addischurch.Adapters.MyRecyclerAdapter;
 import com.gcme.addischurch.addischurch.Adapters.NetworkController;
 import com.gcme.addischurch.addischurch.Adapters.NewsFeeds;
+import com.gcme.addischurch.addischurch.Adapters.SearchAdapter;
+import com.gcme.addischurch.addischurch.Adapters.UIUtils;
 import com.gcme.addischurch.addischurch.DB.DatabaseAdaptor;
 import com.gcme.addischurch.addischurch.FileManager.FileManager;
+import com.gcme.addischurch.addischurch.Model.denomination_list;
+import com.gcme.addischurch.addischurch.Model.search;
 import com.gcme.addischurch.addischurch.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -82,7 +87,7 @@ import java.util.List;
 public class ChurchDenomination extends Fragment {
 
     private FloatingSearchView mSearchView3;
-
+    public static Context context;
     private String mLastQuery = "";
     DatabaseAdaptor DbHelper;
     String url = "http://api.myjson.com/bins/w86a";
@@ -90,6 +95,7 @@ public class ChurchDenomination extends Fragment {
     List<NewsFeeds> feedsList = new ArrayList<NewsFeeds>();
     MyRecyclerAdapter adapter;
     String Selecteditem;
+    ListView listView;
     public ChurchDenomination() {
 
       //  denominations
@@ -102,71 +108,49 @@ public class ChurchDenomination extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_church_denomination, container, false);
 
+        context=getActivity();
         if(getArguments().getString("denominations")!=null) {
              Selecteditem = getArguments().getString("denominations");
         }
 
 
         mSearchView3 = (FloatingSearchView) view.findViewById(R.id.floating_search_view3);
-        ListView listView = (ListView) view.findViewById(R.id.activelist);
-        assert listView != null;
-        listView.setOnItemClickListener (new AdapterView.OnItemClickListener() {
+        listView = (ListView) view.findViewById(R.id.activelist1);
 
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String rowName = cursor.getString(cursor.getColumnIndex(DbHelper.NAME));
-                String rowId = cursor.getString(cursor.getColumnIndex(DbHelper.ID));
-
-
-
-                ChurchDetail secondFrag = new ChurchDetail();
-                Bundle args = new Bundle();
-                args.putString("Key",String.valueOf(rowName));
-                args.putString("Keyid",String.valueOf(rowId));
-
-                secondFrag .setArguments(args);
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, secondFrag)
-                        .addToBackStack("tag_back_churchdetail")
-                        .commit();
-
-
-        }
-        });
 
 
         DbHelper = new DatabaseAdaptor(getContext());
 
 
 
-        Cursor cursor = DbHelper.getSelectedRows(Selecteditem);
-        if (cursor.getCount() != 0) {
-            String[] title = new String[]{DbHelper.NAME};
-            int[] toViewId = new int[]{R.id.titleappointment};
-            SimpleCursorAdapter CurAdapter = new SimpleCursorAdapter(getActivity(), R.layout.child_list_item, cursor, title, toViewId, 0);
-
-            /**suggestion List view Load **/
-
-            listView.setAdapter(CurAdapter);
+        Cursor cu = DbHelper.getSelectedRows(Selecteditem);
 
 
-        } else {
-            Toast.makeText(getActivity(), "happy halowein!", Toast.LENGTH_LONG).show();
+        if(cu.getCount()>0 && cu.moveToFirst()) {
+            List<denomination_list> denoList = new ArrayList<denomination_list>();
+
+
+            for (int i = 0; i < cu.getCount(); i++) {
+                denomination_list deno1 = new denomination_list();
+                cu.moveToPosition(i);
+                deno1.setchName(cu.getString(cu.getColumnIndex(DbHelper.NAME)));
+                deno1.setDeno(cu.getString(cu.getColumnIndex(DbHelper.CHURCH_LOCATION)));
+                deno1.setId(cu.getInt(cu.getColumnIndex(DbHelper.ID)));
+                denoList.add(deno1);
+
+
+            }
+
+            cu.close();
+
+            DenominationAdapter denoAdapter = new DenominationAdapter(denoList, context,ChurchDenomination.this);
+            listView.setAdapter(denoAdapter);
+            UIUtils.setListViewHeightBasedOnItems(listView);
+            listView.setTextFilterEnabled(true);
+
 
         }
 
-
-//        mSearchView3.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
-//
-//            @Override
-//            public void onSearchTextChanged(String oldQuery, final String newQuery) {
-//
-//
-//
-//            }
-//        });
 
         mSearchView3.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
@@ -182,45 +166,28 @@ public class ChurchDenomination extends Fragment {
 
             }
         });
-
-
-
-
         return view;
 
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSearchView3 = (FloatingSearchView) view.findViewById(R.id.floating_search_view3);
         final DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         mSearchView3.attachNavigationDrawerToMenuButton(mDrawerLayout);
-
-
-
-
         mSearchView3.setOnLeftMenuClickListener(
                 new FloatingSearchView.OnLeftMenuClickListener() {
                     @Override
                     public void onMenuOpened() {
-//                        Toast.makeText(getActivity(), "menu opened" , Toast.LENGTH_SHORT).show();
-
                         mDrawerLayout.openDrawer(Gravity.LEFT);
-
-
                     }
 
                     @Override
                     public void onMenuClosed() {
-                    //    Toast.makeText(getActivity(), "menu closed" , Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawer(GravityCompat.START);
                     }
                 });
-
-
-
-
-
         setupSearchBar();
     }
 
@@ -230,29 +197,41 @@ public class ChurchDenomination extends Fragment {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
                 DbHelper = new DatabaseAdaptor(getActivity());
-                Cursor cursor = DbHelper.getCategoryListByKeyword(newQuery);
-                ListView activeList = (ListView) getView().findViewById(R.id.activelist);
+                Cursor cursor = DbHelper.gedenominationListByKeyword(newQuery,Selecteditem);
+                ListView activeList = (ListView) getView().findViewById(R.id.search_suggestion_list);
 
 
+                if(cursor.getCount()>0 && cursor.moveToFirst()) {
+                    List<denomination_list> denoList = new ArrayList<denomination_list>();
 
-                Cursor cu = DbHelper.getAll();
-                if (cu.getCount() != 0) {
-                    String[] title = new String[]{DbHelper.NAME};
-                    int[] toViewId = new int[]{R.id.titleappointment};
-                    final SimpleCursorAdapter CurAdapter2 = new SimpleCursorAdapter(getActivity(), R.layout.child_list_item, cu, title, toViewId, 0);
 
-                    /**suggestion List view Load **/
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        denomination_list deno1 = new denomination_list();
+                        cursor.moveToPosition(i);
+                        deno1.setchName(cursor.getString(cursor.getColumnIndex(DbHelper.NAME)));
+                        deno1.setDeno(cursor.getString(cursor.getColumnIndex(DbHelper.CHURCH_LOCATION)));
+                        deno1.setId(cursor.getInt(cursor.getColumnIndex(DbHelper.ID)));
+                        denoList.add(deno1);
 
-                    ListView listView2 = (ListView) getView().findViewById(R.id.activelist);
-                    listView2.setAdapter(CurAdapter2);
-                    CurAdapter2.swapCursor(cursor);
+
+                    }
+
+                    cursor.close();
+
+                    DenominationAdapter denoAdapter = new DenominationAdapter(denoList, context,ChurchDenomination.this);
+                    activeList.setAdapter(denoAdapter);
+                    UIUtils.setListViewHeightBasedOnItems(activeList);
+                    activeList.setTextFilterEnabled(true);
+
 
                 }
+
 
 
                 if (newQuery.length() > 0) {
 
                     activeList.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.INVISIBLE);
 
                     if (cursor == null) {
 
@@ -265,8 +244,9 @@ public class ChurchDenomination extends Fragment {
 
 
                 } else {
-
+                    listView.setVisibility(View.VISIBLE);
                     activeList.setVisibility(View.INVISIBLE);
+
 
                 }
 
@@ -292,53 +272,11 @@ public class ChurchDenomination extends Fragment {
             @Override
             public void onSearchAction(String query) {
                 mLastQuery = query;
-//                Toast.makeText(getActivity(), "this is what you searched" +query, Toast.LENGTH_SHORT).show();
 
             }
         });
 
     }
-
-
-//
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//
-//
-//    }
-
-
-
-
-
-    public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-
-        // Setting Dialog Title
-        alertDialog.setTitle("GPS settings");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                (getActivity()).startActivity(intent);
-            }
-        });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
-    }
-
 
 
 }

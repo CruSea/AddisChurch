@@ -32,7 +32,7 @@
                 android:layout_marginRight="16dp" />
 
             <TextView
-                android:id="@+id/searchchurchname"
+                android:id="@+id/denochurchname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -42,12 +42,12 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/searchlocation"
+                android:id="@+id/denochurchlocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:text="Description"
-                android:layout_below="@+id/searchchurchname"
+                android:layout_below="@+id/denochurchname"
                 android:layout_toRightOf="@+id/searchimage"
                 android:layout_toEndOf="@+id/searchimage" />
 
@@ -55,21 +55,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/ic_go_select"
-                android:id="@+id/ic_go_select"
+                android:id="@+id/ic_go_select_deno"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
             <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:srcCompat="@android:drawable/btn_dialog"-->
-                <!--android:id="@+id/delete"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:srcCompat="@android:drawable/btn_dialog"-->
+            <!--android:id="@+id/delete"-->
 
-               <!--android:foregroundGravity="right"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_alignParentEnd="true" />-->
+            <!--android:foregroundGravity="right"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentEnd="true" />-->
 
         </RelativeLayout>
 
@@ -78,5 +78,5 @@
 
 
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

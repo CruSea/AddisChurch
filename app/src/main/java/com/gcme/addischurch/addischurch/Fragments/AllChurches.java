@@ -221,7 +221,6 @@ public class AllChurches extends Fragment {
                 new FloatingSearchView.OnLeftMenuClickListener() {
                     @Override
                     public void onMenuOpened() {
-                        Toast.makeText(getActivity(), "menu opened" , Toast.LENGTH_SHORT).show();
 
                         mDrawerLayout.openDrawer(Gravity.LEFT);
 
@@ -230,7 +229,6 @@ public class AllChurches extends Fragment {
 
                     @Override
                     public void onMenuClosed() {
-                        Toast.makeText(getActivity(), "menu closed" , Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawer(GravityCompat.START);
                     }
                 });

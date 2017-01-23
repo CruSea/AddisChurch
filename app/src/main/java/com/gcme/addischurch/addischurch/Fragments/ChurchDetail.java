@@ -1,6 +1,8 @@
 package com.gcme.addischurch.addischurch.Fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -51,6 +53,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gcme.addischurch.addischurch.Fragments.MyFav.getfavlist;
+
 public class ChurchDetail extends Fragment {
     DatabaseAdaptor DbHelper;
     public static GoogleMap mMap;
@@ -67,6 +71,7 @@ public class ChurchDetail extends Fragment {
     TextView contactsview,webview,sermonview;
     String SelectedSearchitem,Selectedmarkname;
     ImageView BannerImage;
+    Toolbar Detailtoolbar;
     RequestQueue queue;
     String url = "https://raw.githubusercontent.com/mobilesiri/Android-Custom-Listview-Using-Volley/master/richman.json";
     RecyclerView recyclerView;
@@ -85,7 +90,7 @@ public class ChurchDetail extends Fragment {
 
         contactsview = (TextView) view.findViewById(R.id.phoneno);
         webview = (TextView) view.findViewById(R.id.web);
-
+        Detailtoolbar= (Toolbar) view.findViewById(R.id.detailtoolbar);
         BannerImage= (ImageView) view.findViewById(R.id.headerimage);
         scheduleList= (ListView) view.findViewById(R.id.ScheduleList);
         churchwhite = (ImageButton) view.findViewById(R.id.favhomechurch1);
@@ -99,8 +104,10 @@ public class ChurchDetail extends Fragment {
                 //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
                 if(getArguments().getString("Key")!=null) {
                     String Selecteditemid = getArguments().getString("Keyid");
+                    if(DbHelper.checkfavDataRowById(Selecteditemid).getCount()==0){
                     DbHelper.Insertfav(Selecteditemid);
-                    Toast.makeText(getActivity(), "fav inserted", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 }
 
@@ -111,13 +118,9 @@ public class ChurchDetail extends Fragment {
         favred.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(getArguments().getString("Key")!=null) {
                     String Selecteditemid = getArguments().getString("Keyid");
-
                     DbHelper.deletefavData(Selecteditemid);
-                    Toast.makeText(getActivity(), "fav removed", Toast.LENGTH_SHORT).show();
-
                 }
 
                 favwhite.setVisibility(View.VISIBLE);
@@ -129,52 +132,114 @@ public class ChurchDetail extends Fragment {
             public void onClick(View v) {
 
 
-                if(getArguments().getString("Keyid")!=null) {
-                    SelectedSearchitem = getArguments().getString("Keyid");
-                    DbHelper.changehome();
-                    DbHelper.InsertHome(SelectedSearchitem);
-                }
+
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setCancelable(false);
+                // Setting Dialog Title
+                alertDialog.setTitle("Wede Church");
+
+                // Setting Dialog Message
+                alertDialog.setMessage("Do you want make "+ getArguments().getString("MarkerName")+ " your home church? ");
+
+                // On pressing Settings button
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int which) {
+
+
+                        if(getArguments().getString("Keyid")!=null) {
+                            SelectedSearchitem = getArguments().getString("Keyid");
+                            DbHelper.changehome();
+                            DbHelper.InsertHome(SelectedSearchitem);
+                        }
 
 
 
 
-                churchwhite.setVisibility(View.GONE);
-                churchred.setVisibility(View.VISIBLE);
+                        churchwhite.setVisibility(View.GONE);
+                        churchred.setVisibility(View.VISIBLE);
+
+                    }
+                });
+
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                // Showing Alert Message
+                alertDialog.show();
+
+
+
+
             }
         });
         churchred.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(getArguments().getString("Keyid" )!=null) {
-                    SelectedSearchitem = getArguments().getString("Keyid");
-                    DbHelper.changehome();
-                    DbHelper.InsertHome(SelectedSearchitem);
-                }
 
 
-                //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                alertDialog.setCancelable(false);
+                // Setting Dialog Title
+                alertDialog.setTitle("Wede Church");
 
-                churchred.setVisibility(View.GONE);
-                churchwhite.setVisibility(View.VISIBLE);
+
+                // Setting Dialog Message
+                alertDialog.setMessage("Do remove "+ getArguments().getString("MarkerName")+ " from your home church? ");
+
+                // On pressing Settings button
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int which) {
+
+
+                            DbHelper.changehome();
+
+
+
+
+                        //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
+
+                        churchred.setVisibility(View.GONE);
+                        churchwhite.setVisibility(View.VISIBLE);
+
+                    }
+                });
+
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                // Showing Alert Message
+                alertDialog.show();
+
+
+
+
             }
         });
 
 
-        if(getArguments().getString("Key")!=null) {
+        if(getArguments().getString("Keyid")!=null) {
             SelectedSearchitem = getArguments().getString("Key");
             String Selecteditemid = getArguments().getString("Keyid");
             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
             toolbar.inflateMenu(R.menu.main);
 
-            toolbar.setTitle(SelectedSearchitem);
+            Detailtoolbar.setTitle(SelectedSearchitem);
 
 
 
             FillContents(Selecteditemid);
             getschedule(Selecteditemid);
 
-
+            StatusChecker(Selecteditemid);
 
 
         }
@@ -187,7 +252,7 @@ public class ChurchDetail extends Fragment {
             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
             toolbar.inflateMenu(R.menu.main);
 
-            toolbar.setTitle(Selectedmarkname);
+            Detailtoolbar.setTitle(Selectedmarkname);
 
 
 
@@ -293,12 +358,53 @@ public class ChurchDetail extends Fragment {
 
 
 
-
         return view;
     }
 
+    private void StatusChecker(String churchid) {
 
-   /** populates the schedule list from the database**/
+        Cursor cursor=DbHelper.checkfavDataRowById(churchid);
+        Cursor cursor2=DbHelper.CheckhomeRowById(churchid);
+
+
+
+        if (cursor.getCount()==0&&cursor2.getCount()==0){
+
+            churchwhite.setVisibility(View.VISIBLE);
+            favwhite.setVisibility(View.VISIBLE);
+            churchred.setVisibility(View.INVISIBLE);
+            favred.setVisibility(View.INVISIBLE);
+
+
+        }
+        else if (cursor.getCount()==1&&cursor2.getCount()==1){
+            churchwhite.setVisibility(View.INVISIBLE);
+            favwhite.setVisibility(View.INVISIBLE);
+            churchred.setVisibility(View.VISIBLE);
+            favred.setVisibility(View.VISIBLE);
+
+        }
+
+        else if (cursor.getCount()==1&&cursor2.getCount()==0){
+
+            churchwhite.setVisibility(View.VISIBLE);
+            favwhite.setVisibility(View.INVISIBLE);
+            churchred.setVisibility(View.INVISIBLE);
+            favred.setVisibility(View.VISIBLE);
+        }
+        else if (cursor.getCount()==0&&cursor2.getCount()==1){
+
+            churchwhite.setVisibility(View.INVISIBLE);
+            favwhite.setVisibility(View.VISIBLE);
+            churchred.setVisibility(View.VISIBLE);
+            favred.setVisibility(View.INVISIBLE);
+        }
+
+
+    }
+
+
+    /** populates the schedule list from the database**/
     private void getschedule(String selecteditemid) {
 
         Cursor cursor=DbHelper.getScheduleDataRowById(selecteditemid);

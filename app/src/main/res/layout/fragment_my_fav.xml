@@ -31,7 +31,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
         <ListView android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:layout_below="@id/floating_search_view4"
             android:divider="#00000000"
             android:visibility="gone"
             android:background="@color/white"

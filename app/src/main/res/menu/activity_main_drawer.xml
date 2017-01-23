@@ -4,27 +4,27 @@
 
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/custom_map_pin"
+            android:icon="@drawable/ic_map_white"
             android:title="Home" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_event"
             android:title="Events" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/ic_all_church"
             android:title="All Churches" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/ic_home"
             android:title="MyChuch" />
         <item
             android:id="@+id/nav_share"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@mipmap/ic_favorite_white"
             android:title="MyFavorites" />
          <item
               android:id="@+id/About"
-             android:icon="@drawable/ic_menu_share"
+             android:icon="@drawable/ic_info_black"
              android:title="About " />
 
 </menu>

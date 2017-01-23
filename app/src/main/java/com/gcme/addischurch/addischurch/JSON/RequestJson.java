@@ -74,9 +74,9 @@ public class RequestJson extends JobService {
 
                             }} catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    "Error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(),
+//                                    "Error: " + e.getMessage(),
+//                                    Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -84,8 +84,8 @@ public class RequestJson extends JobService {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),
+//                        error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -131,9 +131,9 @@ public class RequestJson extends JobService {
 
                             }} catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    "Error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(),
+//                                    "Error: " + e.getMessage(),
+//                                    Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -143,8 +143,8 @@ public class RequestJson extends JobService {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),
+//                        error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -162,10 +162,10 @@ public class RequestJson extends JobService {
 
         long id = DbHelper.InsertChurchSchedule(Id, churchId, scheduledate, scheduletime, scheduleCategory);
         if (id < 0) {
-            Toast.makeText(getApplicationContext(), "Scgedule JSON insert failed!", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Scgedule JSON insert failed!", Toast.LENGTH_LONG).show();
 
         } else {
-            Toast.makeText(getApplicationContext(), "Scgedule JSON data successfully inserted!", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Scgedule JSON data successfully inserted!", Toast.LENGTH_LONG).show();
 
         }
 
@@ -182,10 +182,10 @@ public class RequestJson extends JobService {
 
             long id = DbHelper.InsertChurch(Id, name, churchlocation, contacts, web, sermons, category, longitude, latitude, ImageLoction, ImageUrl);
             if (id < 0) {
-                Toast.makeText(getApplicationContext(), "JSON insert failed!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "JSON insert failed!", Toast.LENGTH_LONG).show();
 
             } else {
-                Toast.makeText(getApplicationContext(), "JSON data successfully inserted!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "JSON data successfully inserted!", Toast.LENGTH_LONG).show();
 
             }
 

@@ -31,7 +31,6 @@ public class DatabaseAdaptor {
     public String WEB="_website";
     public String LONGITUDE="_longitude";
     public String LATITUDE="_latitude";
-    public String SERMONS="_sermons";
     public String ImageLoction="_imagesLocation";
     public String ImageUrl="_ImageUrl";
 
@@ -153,6 +152,36 @@ public class DatabaseAdaptor {
     }
 
 
+    public Cursor CheckhomeRowById(String churchid) {
+
+
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + Home_Church + " FROM " + TABLE5_NAME + " WHERE " + Home_Church + " = '" + churchid + "'", null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        db.close();
+        return c;
+
+    }
+
+
+
+    public Cursor checkfavDataRowById(String churchid) {
+
+
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + FavSelected + " FROM " + TABLE4_NAME + " WHERE " + FavSelected + " = '" + churchid + "'", null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        db.close();
+        return c;
+
+    }
+
 
 
     /**Church denomination**/
@@ -273,8 +302,6 @@ public class DatabaseAdaptor {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from "+TABLE1_NAME,null);
-
-
         return c;
 
 
@@ -429,9 +456,9 @@ public class DatabaseAdaptor {
     public Cursor getCategoryListByKeyword(String search) {
         SQLiteDatabase db = helper.getReadableDatabase();
         String selectQuery =  "SELECT  rowid as " +
-                "_id" + "," +
+                ID + "," +
                 NAME + "," +
-                CATEGORY +
+                CHURCH_LOCATION +
                 " FROM " + TABLE1_NAME +
                 " WHERE " +  NAME + "  LIKE  '%" +search + "%' "
                 ;
@@ -451,6 +478,38 @@ public class DatabaseAdaptor {
     }
 
 /**END OF SEARCH**/
+
+
+
+    /**FOR SEARCH**/
+
+    public Cursor gedenominationListByKeyword(String search,String category) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String selectQuery =  "SELECT  rowid as " +
+                ID + "," +
+                NAME + "," +
+                CHURCH_LOCATION+ "," +
+                 CATEGORY +
+                " FROM " + TABLE1_NAME +
+                " WHERE " +  NAME + "  LIKE  '%" +search + "%' "+ " and " + CATEGORY + "  LIKE  '%" +category + "%' "
+                ;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+
+//        if (cursor == null) {
+//
+//            return null;
+//        } else if (!cursor.moveToFirst()) {
+//            cursor.close();
+//
+//            return null;
+//        }
+        return cursor;
+    }
+
+/**END OF SEARCH**/
+
 
 
 

@@ -49,6 +49,7 @@ public class Utils {
 
 
     public Utils(Context context){
+
         this.activity = (MainActivity) context;
     }
 
@@ -81,19 +82,19 @@ public class Utils {
         return px;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public static Point getScreenSize(){
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        try {
-            display.getSize(size);
-        }catch (NoSuchMethodError e) {
-            // For lower than api 11
-            size.x = display.getWidth();
-            size.y = display.getHeight();
-        }
-        return size;
-    }
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+//    public static Point getScreenSize(){
+//        Display display = activity.getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        try {
+//            display.getSize(size);
+//        }catch (NoSuchMethodError e) {
+//            // For lower than api 11
+//            size.x = display.getWidth();
+//            size.y = display.getHeight();
+//        }
+//        return size;
+//    }
 
     public static boolean isAndroid_5_0(){
         String version = Build.VERSION.RELEASE;
@@ -135,13 +136,13 @@ public class Utils {
 
     public static int getScreenHeight() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        //activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return displaymetrics.heightPixels;
     }
 
     public static int getScreenWidth() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        //activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return displaymetrics.widthPixels;
     }
 

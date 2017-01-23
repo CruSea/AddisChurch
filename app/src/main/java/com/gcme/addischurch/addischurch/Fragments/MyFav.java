@@ -205,6 +205,7 @@ public class MyFav extends Fragment {
 
             }
 
+            cursor.close();
 
             FavoriteAdapter favoriteAdapter = new FavoriteAdapter(favoritelist, context);
             favList.setAdapter(favoriteAdapter);
