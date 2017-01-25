@@ -11,8 +11,8 @@ import com.gcme.addischurch.addischurch.R;
 
 public class EventDetail extends AppCompatActivity {
 
-    TextView title, sourcedetail;
-    String feed, source;
+    TextView title, sourcedetail, descrip;
+    String feed, source,detdesc;
     NetworkImageView image;
     Context context;
 
@@ -22,13 +22,14 @@ public class EventDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
 
-
+        descrip = (TextView) findViewById(R.id.detail_description);
         title = (TextView) findViewById(R.id.detail_title);
         sourcedetail = (TextView) findViewById(R.id.detail_source);
         image = (NetworkImageView) findViewById(R.id.detail_image);
 
-        feed = getIntent().getExtras().getString("feedname");
-        source = getIntent().getExtras().getString("source");
+        feed = getIntent().getExtras().getString("name");
+        source = getIntent().getExtras().getString("cat");
+        detdesc = getIntent().getExtras().getString("desc");
 //        final String path = getIntent().getStringExtra("imagePath");
 //        image = BitmapFactory.decodeFile(path);
 //        String imagerece = getIntent().getParcelableExtra("image");
@@ -38,6 +39,7 @@ public class EventDetail extends AppCompatActivity {
         String bitmap = getIntent().getStringExtra("image");
         image.setImageUrl(bitmap, imageLoader);
 
+        descrip.setText(detdesc);
         title.setText(feed);
         sourcedetail.setText(source);
 

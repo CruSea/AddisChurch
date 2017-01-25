@@ -50,7 +50,7 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
         final EventsHandler feeds = feedsList.get(position);
         //Pass the values of feeds object to Views
         holder.title.setText(feeds.getFeedName());
-        holder.source.setText(feeds.getSource());
+        holder.source.setText(feeds.getCatagory());
         holder.imageview.setImageUrl(feeds.getImgURL(), NetworkEventController.getInstance(context).getImageLoader());
         holder.imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,10 +60,11 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
 //                args.putString("denominations",feeds.getFeedName());
                 Intent intent=new Intent(context, EventDetail.class);
                 //add data to the Intent object
-                intent.putExtra("feedname", feeds.getFeedName());
-                intent.putExtra("source", feeds.getSource());
+                intent.putExtra("name", feeds.getFeedName());
+                intent.putExtra("cat", feeds.getCatagory());
                 intent.putExtra("image", feeds.getImgURL());
-                intent.putExtra("id", feeds.getImgURL());
+                intent.putExtra("desc", feeds.getDescription());
+                intent.putExtra("loc", feeds.getLocation());
                 //start the second activity
                 context.startActivity(intent);
 

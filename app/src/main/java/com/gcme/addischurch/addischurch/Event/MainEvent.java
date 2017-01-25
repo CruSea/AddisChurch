@@ -77,7 +77,7 @@ spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                         if(eventlocation == selectedLocation) {
 
-                            EventsHandler feeds = new EventsHandler(obj.getString("name"), obj.getString("banner"),obj.getString("catagory"));
+                            EventsHandler feeds = new EventsHandler(obj.getString("name"), obj.getString("banner"),obj.getString("catagory"),obj.getString("description"), obj.getString("location"));
 
                             // adding movie to movies array
                             feedsList.add(feeds);
@@ -138,7 +138,7 @@ spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     try {
 
                         JSONObject obj = response.getJSONObject(i);
-                        EventsHandler feeds = new EventsHandler(obj.getString("name"), obj.getString("banner"),obj.getString("catagory"));
+                        EventsHandler feeds = new EventsHandler(obj.getString("name"), obj.getString("banner"),obj.getString("catagory"),obj.getString("description"), obj.getString("location"));
 
                         // adding movie to movies array
                         feedsList.add(feeds);
