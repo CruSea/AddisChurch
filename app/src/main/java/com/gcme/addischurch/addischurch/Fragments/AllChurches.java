@@ -56,8 +56,7 @@ public class AllChurches extends Fragment {
     DatabaseAdaptor DbHelper;
     String url = "http://api.myjson.com/bins/w86a";
     RecyclerView recyclerView;
-    List<NewsFeeds> feedsList = new ArrayList<NewsFeeds>();
-    MyRecyclerAdapter adapter;
+
     private FloatingSearchView mSearchView2;
     String no="10";
     public AllChurches() {
@@ -69,6 +68,9 @@ public class AllChurches extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
 
 
     }
@@ -83,8 +85,8 @@ public class AllChurches extends Fragment {
         FM = new FileManager(getActivity());
        // MainActivity ma=new MainActivity();
 
-
-        adapter = new MyRecyclerAdapter(getActivity(), feedsList,this);
+        List<NewsFeeds> feedsList = new ArrayList<NewsFeeds>();
+        MyRecyclerAdapter adapter = new MyRecyclerAdapter(getActivity(), feedsList,this);
         final RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));

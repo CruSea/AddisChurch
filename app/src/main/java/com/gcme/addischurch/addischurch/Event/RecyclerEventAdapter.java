@@ -63,6 +63,7 @@ public class RecyclerEventAdapter extends RecyclerView.Adapter<RecyclerEventAdap
                 intent.putExtra("feedname", feeds.getFeedName());
                 intent.putExtra("source", feeds.getSource());
                 intent.putExtra("image", feeds.getImgURL());
+                intent.putExtra("id", feeds.getImgURL());
                 //start the second activity
                 context.startActivity(intent);
 

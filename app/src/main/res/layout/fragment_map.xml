@@ -41,10 +41,9 @@
         android:visibility="invisible"
         android:background="@color/colorPrimary"
         android:text="this is the location"
-        wheel:layout_constraintLeft_toLeftOf="parent"
-
         wheel:layout_constraintHorizontal_bias="0.0"
-        tools:layout_editor_absoluteY="69dp" />
+        wheel:layout_constraintTop_toBottomOf="@+id/floating_search_view11"
+        wheel:layout_constraintLeft_toLeftOf="parent" />
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/progress_wheel"
@@ -107,7 +106,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         wheel:layout_constraintBottom_toTopOf="@+id/car1"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="32dp" />
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/floating_search_view11"

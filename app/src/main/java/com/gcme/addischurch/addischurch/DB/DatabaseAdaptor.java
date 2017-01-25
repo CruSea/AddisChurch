@@ -466,14 +466,14 @@ public class DatabaseAdaptor {
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
 
-        if (cursor == null) {
-
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-
-            return null;
-        }
+//        if (cursor == null) {
+//
+//            return null;
+//        } else if (!cursor.moveToFirst()) {
+//            cursor.close();
+//
+//            return null;
+//        }
         return cursor;
     }
 

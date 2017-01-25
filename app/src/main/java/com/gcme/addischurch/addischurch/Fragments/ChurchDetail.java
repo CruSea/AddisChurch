@@ -76,6 +76,7 @@ public class ChurchDetail extends Fragment {
     String url = "https://raw.githubusercontent.com/mobilesiri/Android-Custom-Listview-Using-Volley/master/richman.json";
     RecyclerView recyclerView;
     ListView  scheduleList;
+    FloatingActionButton Detailgetdirection;
     List<EventHandler> feedsList = new ArrayList<EventHandler>();
     RecyclerEventAdapter adapter;
     public ChurchDetail() {
@@ -87,7 +88,7 @@ public class ChurchDetail extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_church_detail, container, false);
 /**recieve the church name**/
-
+        Detailgetdirection= (FloatingActionButton) view.findViewById(R.id.detailgetdirection);
         contactsview = (TextView) view.findViewById(R.id.phoneno);
         webview = (TextView) view.findViewById(R.id.web);
         Detailtoolbar= (Toolbar) view.findViewById(R.id.detailtoolbar);
@@ -102,7 +103,7 @@ public class ChurchDetail extends Fragment {
             public void onClick(View v) {
 
                 //   Toast.makeText(getActivity(), "white clicked", Toast.LENGTH_SHORT).show();
-                if(getArguments().getString("Key")!=null) {
+                if(getArguments().getString("Keyid")!=null) {
                     String Selecteditemid = getArguments().getString("Keyid");
                     if(DbHelper.checkfavDataRowById(Selecteditemid).getCount()==0){
                     DbHelper.Insertfav(Selecteditemid);
@@ -118,7 +119,7 @@ public class ChurchDetail extends Fragment {
         favred.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getArguments().getString("Key")!=null) {
+                if(getArguments().getString("Keyid")!=null) {
                     String Selecteditemid = getArguments().getString("Keyid");
                     DbHelper.deletefavData(Selecteditemid);
                 }

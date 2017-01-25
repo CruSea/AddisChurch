@@ -117,7 +117,7 @@ public class MapFragment extends Fragment {
     boolean isNetworkEnabled = false;
     ProgressBar mProgressBar;
     Polyline polylin;
-    String churchidbyname;
+
     LatLng CurrentLocation;
     Marker mPositionMarker;
     Boolean isMarkerRotating = false;
@@ -915,13 +915,13 @@ public class MapFragment extends Fragment {
 
 
                         Cursor cursor =DbHelper.getMarkerDataRowByname(marker.getTitle());
-                        if (cursor != null) {
-                            churchidbyname = cursor.getString(cursor.getColumnIndex(DbHelper.ID));
+                        Bundle args = new Bundle();
+                        if (cursor.getCount()!=0) {
+                            String churchidbyname = cursor.getString(cursor.getColumnIndex(DbHelper.ID));
+                            args.putString("Keyid", churchidbyname);
                         }
                         ChurchDetail secondFrag = new ChurchDetail();
-                        Bundle args = new Bundle();
                         args.putString("MarkerName", marker.getTitle());
-                        args.putString("Keyid", churchidbyname);
                         Utils.psLog("Selected Item Name : " + chcat_id);
                         secondFrag.setArguments(args);
                         getFragmentManager()
